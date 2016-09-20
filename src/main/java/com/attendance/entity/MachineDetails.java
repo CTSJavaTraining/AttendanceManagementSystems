@@ -24,7 +24,7 @@ public class MachineDetails implements java.io.Serializable {
 	private String machineId;
 	private String location;
 	private String machineType;
-	 private Set<AttendanceDetails> attendancedetailses = new HashSet<AttendanceDetails>();
+	private Set<AttendanceDetails> attendancedetailses = new HashSet<AttendanceDetails>();
 	private Set<Employee> employees = new HashSet<Employee>();
 
 	public MachineDetails() {
@@ -36,8 +36,8 @@ public class MachineDetails implements java.io.Serializable {
 		this.machineType = machineType;
 	}
 
-	public MachineDetails(String machineId, String location, String machineType, Set attendancedetailses,
-			Set employees) {
+	public MachineDetails(String machineId, String location, String machineType,
+			Set<AttendanceDetails> attendancedetailses, Set<Employee> employees) {
 		this.machineId = machineId;
 		this.location = location;
 		this.machineType = machineType;

@@ -30,8 +30,7 @@ public class Employee implements java.io.Serializable {
 	private String lastname;
 	private String status;
 	private String usertype;
-	  private Set<AttendanceDetails> attendancedetailses = new HashSet<AttendanceDetails>();
-	
+	private Set<AttendanceDetails> attendancedetailses = new HashSet<AttendanceDetails>();
 
 	public Employee() {
 	}
@@ -47,7 +46,7 @@ public class Employee implements java.io.Serializable {
 	}
 
 	public Employee(EmployeeId id, MachineDetails machinedetails, String firstname, String lastname, String status,
-			String usertype, Set attendancedetailses) {
+			String usertype, Set<AttendanceDetails> attendancedetailses) {
 		this.id = id;
 		this.machinedetails = machinedetails;
 		this.firstname = firstname;

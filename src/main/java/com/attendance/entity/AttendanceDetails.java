@@ -1,6 +1,5 @@
 package com.attendance.entity;
 
-
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,12 +33,31 @@ public class AttendanceDetails implements java.io.Serializable {
 	private Integer totalHours;
 
 	public AttendanceDetails() {
+		/**
+		 * default constructor
+		 */
 	}
 
+	/**
+	 * 
+	 * @param employee
+	 *            of class Employee type
+	 * @param machinedetails
+	 *            of class MachineDetails
+	 */
 	public AttendanceDetails(Employee employee, MachineDetails machinedetails) {
 		this.employee = employee;
 		this.machinedetails = machinedetails;
 	}
+
+	/**
+	 * 
+	 * @param employee
+	 * @param machinedetails
+	 * @param swipeIn
+	 * @param swipeOut
+	 * @param totalHours
+	 */
 
 	public AttendanceDetails(Employee employee, MachineDetails machinedetails, Date swipeIn, Date swipeOut,
 			Integer totalHours) {

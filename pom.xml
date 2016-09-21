@@ -1,111 +1,98 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>AttendanceManagementSystem</groupId>
-  <artifactId>AttendanceManagement</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  	<properties>
-		<cxf.version>3.1.7</cxf.version>
-	</properties>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>AttendanceManagementSystem</groupId>
+	<artifactId>AttendanceManagement</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.4.0.RELEASE</version>
+	</parent>
 
 	<repositories>
-    <repository>
-      <id>java.net</id>
-      <url>https://maven.java.net/content/repositories/public/</url>
-    </repository>
- </repositories>
- 	  <parent>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <version>1.4.0.RELEASE</version>
-</parent>
- 	<dependencies>
-		 <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-web</artifactId>
-     
-    </dependency>
-<dependency>
-<groupId>org.springframework</groupId>
-<artifactId>spring-core</artifactId>
+		<repository>
+			<id>repo1</id>
+			<url>http://maven.java.net/content/repositories/public/</url>
+		</repository>
+		<repository>
+			<id>repo2</id>
+			<url>http://repo.maven.apache.org/maven2</url>
+		</repository>
+	</repositories>
 
-</dependency>
- <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-           <artifactId>jackson-core</artifactId>
-       
-        </dependency>
+	<properties>
+		<cxf.version>3.1.7</cxf.version>
+		<javax.version>2.0.0</javax.version>
+		<ecpliselink.version>2.5.0</ecpliselink.version>
+		<jpa.version>1.0.0.Final</jpa.version>
+		<log4j.version>1.2.12</log4j.version>
+		<poi.version>3.9</poi.version>
+		<java.version>1.8</java.version>
+	</properties>
 
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
 
 		<dependency>
-			<groupId>org.eclipse.persistence</groupId>
-			<artifactId>javax.persistence</artifactId>
-			<version>2.0.0</version>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
 		</dependency>
+
 		<dependency>
-			<groupId>org.eclipse.persistence</groupId>
-			<artifactId>eclipselink</artifactId>
-			<version>2.5.0</version>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
 		</dependency>
+
+		
+
 		<dependency>
 			<groupId>org.hibernate.javax.persistence</groupId>
-			<artifactId>hibernate-jpa-2.0-api</artifactId>
-			<version>5.0.9.Final</version>
+			<artifactId>hibernate-jpa-2.1-api</artifactId>
+			<version>${jpa.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
-			<version>5.0.9.Final</version>
 		</dependency>
 
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.39</version>
 		</dependency>
+
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
-			<version>1.2.12</version>
+			<version>${log4j.version}</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
 
-				<dependency>
-    <groupId>org.apache.poi</groupId>
-    <artifactId>poi</artifactId>
-    <version>3.9</version>
-</dependency>
-<dependency>
-    <groupId>org.apache.poi</groupId>
-    <artifactId>poi-ooxml</artifactId>
-    <version>3.9</version>
-</dependency>
-
-
-
+		
 
 	</dependencies>
-	<build>
 
+	<build>
 		<plugins>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-
+					<source>${java.version}</source>
+					<target>${java.version}</target>
 				</configuration>
-
-
 			</plugin>
+
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>2.6</version>
-
-
 			</plugin>
-		</plugins>
 
+		</plugins>
 	</build>
 </project>

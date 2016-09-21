@@ -73,7 +73,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 				logger.info("Entered EmpId is invalid.No such data present in DB");
 			}
 		} catch (Exception e) {
-			logger.info("Exception occurred:" + e);
+			logger.error("Exception occurred:" + e);
 		}
 	}
 

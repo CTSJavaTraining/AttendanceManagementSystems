@@ -20,6 +20,8 @@ import com.attendance.service.EmployeeService;
 public class EmployeeServiceImpl implements EmployeeService {
 
 	static final Logger logger = Logger.getLogger(EmployeeServiceImpl.class);
+	
+	ApplicationContext context = null;
 
 	/**
 	 * 
@@ -30,7 +32,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public void insertEmployee(Employee employee) {
 
 		try {
-			ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
+			context = new ClassPathXmlApplicationContext("Beans.xml");
 
 			EmployeeDAOImpl emp = (EmployeeDAOImpl) context.getBean("employee");
 
@@ -57,7 +59,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public void deleteEmployee(EmployeeId empId) {
 
 		try {
-			ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
+			 context = new ClassPathXmlApplicationContext("Beans.xml");
 
 			EmployeeDAOImpl emp = (EmployeeDAOImpl) context.getBean("employee");
 

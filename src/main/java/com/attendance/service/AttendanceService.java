@@ -1,6 +1,6 @@
 package com.attendance.service;
 
-import java.util.List;
+
 import com.attendance.entity.AttendanceDetails;
 
 /**
@@ -26,6 +26,6 @@ public interface AttendanceService {
 	 * @param attendance
 	 */
 
-	public void insertSwipeHours(List<AttendanceDetails> attendance);
+	public void insertSwipeHours(AttendanceDetails attendance);
 
 }

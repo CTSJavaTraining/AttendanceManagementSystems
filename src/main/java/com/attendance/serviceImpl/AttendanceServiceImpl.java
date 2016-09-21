@@ -5,15 +5,18 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.log4j.Logger;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import com.attendance.DAOServiceImpl.AttendanceDAOImpl;
 import com.attendance.entity.AttendanceDetails;
 import com.attendance.service.AttendanceService;
+
+
+
 
 /**
  * @author 542320 
@@ -24,6 +27,8 @@ import com.attendance.service.AttendanceService;
 public class AttendanceServiceImpl implements AttendanceService {
 
 	static final Logger logger = Logger.getLogger(AttendanceService.class);
+	
+	ApplicationContext context = null;
 
 	/**
 	 * Method to get the attendance details and save it as excel.
@@ -35,7 +40,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 		List<AttendanceDetails> attendanceList = new ArrayList<AttendanceDetails>();
 
 		try {
-			ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
+			 context = new ClassPathXmlApplicationContext("Beans.xml");
 
 			AttendanceDAOImpl attendanceDAO = (AttendanceDAOImpl) context.getBean("attendance");
 			attendanceList = attendanceDAO.getAttendanceDetails();
@@ -83,18 +88,21 @@ public class AttendanceServiceImpl implements AttendanceService {
 	 * Method to pass the attendance details of the employees and invoke the DAO method to persist.
 	 */
 	@Override
-	public void insertSwipeHours(List<AttendanceDetails> attendance) {
-
+	public void insertSwipeHours(AttendanceDetails attendance) {
+		
 		try {
-			ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
+			 context = new ClassPathXmlApplicationContext("Beans.xml");
 
 			AttendanceDAOImpl attendanceDAO = (AttendanceDAOImpl) context.getBean("attendance");
-			attendanceDAO.insertSwipeHours(attendance);
+			attendanceDAO.insertSwipeInHours(attendance);
 		} catch (Exception e) {
 
 			logger.error("Encountered exception:" + e);
 		}
+		
 
 	}
+
+
 
 }

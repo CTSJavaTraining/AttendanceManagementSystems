@@ -1,6 +1,9 @@
 package com.attendance.DAOServiceImpl;
 
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
+
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import org.apache.log4j.Logger;
@@ -41,39 +44,32 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 
 	/**
 	 * 
-	 * Method to insert the swipe in and swipe out time in the attendance
+	 * Method to insert the swipe in time in the attendance
 	 * details of the employee. Persist the inserted values in DB.
 	 */
 
 	@Override
-	public void insertSwipeHours(List<AttendanceDetails> employee) throws Exception {
-
+	public void insertSwipeInHours(AttendanceDetails employee) throws Exception {
+	    Date date = new Date();
 		entityManager = JPAUtil.getEntityManager();
 		entityManager.getTransaction().begin();
-
-		employee.forEach(emp -> {
-			try {
-				getEmployee(emp.getEmployee().getId().getEmployeeid(),emp.getEmployee().getId().getAccessCardno());
-				entityManager.persist(emp);
-
-			} catch (Exception e) {
-				logger.info(e);
-			}
-		});
-
-		entityManager.getTransaction().commit();
-		logger.info("Records inserted successfully");
-
-	}
+		getEmployee(employee.getEmployee().getId().getEmployeeid(),employee.getEmployee().getId().getAccessCardno());
+		validateEmployeeMachineDetails(employee.getEmployee().getId().getEmployeeid(),employee.getMachinedetails().getMachineId());
+		employee.setSwipeIn(date);
+		entityManager.persist(employee);
+		entityManager.getTransaction().commit();	
+		logger.info("Records inserted successfully");		
+		}
 
 	/**
 	 * 
 	 * Method to check for valid employee Id and access card. Throws exception
 	 * message incase of invalid input
+	 * @throws DAOException 
 	 */
 
 	@Override
-	public void getEmployee(int empId, String cardno) throws Exception {
+	public void getEmployee(int empId, String cardno) throws DAOException {
 		logger.debug("The given Employee ID is:" + empId);
 
 		entityManager = JPAUtil.getEntityManager();
@@ -88,9 +84,60 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 			throw new DAOException(
 					"The given Employee ID and access card no combination doesn't match with any data or doesn't exists in DB");
 		} else {
-			logger.info("Inserting the attendance details in DB");
+			logger.info("Employee ID successfully validated");
 		}
 
+	}
+
+	@Override
+	public void insertSwipeOutHours(AttendanceDetails employee) throws Exception {
+		
+		entityManager = JPAUtil.getEntityManager();
+		entityManager.getTransaction().begin();
+		query = entityManager.createQuery(
+				"SELECT a.swipe_in FROM AttendanceDetails a WHERE a.employeeid= :id and e.access_cardno= :cardNo");
+		query.setParameter("id", employee.getEmployee().getId().getEmployeeid());
+		query.setParameter("cardNo", employee.getEmployee().getId().getAccessCardno());
+		query.setParameter("status", "Y");
+		
+		
+	}
+
+	@Override
+	public int calculateTotalHours(Date swipeInTime, Date swipeOutTime) throws Exception {
+		
+		return 0;
+	}
+
+	@Override
+	public int calculateWeekAverage(int totalHours) throws Exception {
+		
+		return 0;
+	}
+
+	@Override
+	public void validateEmployeeMachineDetails(int empId, String machineId) throws DAOException  {
+		
+		logger.debug("The given Employee ID is:" + empId);
+		logger.debug("The given Machine ID is:" + machineId);
+
+		entityManager = JPAUtil.getEntityManager();
+		entityManager.getTransaction().begin();
+		query = entityManager.createQuery(
+				"SELECT machine FROM machinedetails machine WHERE machine.employee_id= :empId and machine.machine_Id= :machineId and machine.activate_status= :activate_status");
+		query.setParameter("empId", empId);
+		query.setParameter("machineId", machineId);
+		query.setParameter("activate_status", "Y");
+		int validMachine = query.getResultList().size();
+		if (validMachine == 0) {
+			throw new DAOException(
+					"The given machine ID "+machineId+ "is not mapped to employee" +empId);
+		} else {
+			logger.info("Machine Details validated for Employee Successfully");
+		}
+		
+		
+		
 	}
 
 }

@@ -9,8 +9,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.attendance.entity.Employee;
 import com.attendance.serviceImpl.EmployeeServiceImpl;
@@ -37,7 +39,7 @@ public class EmployeeAttendanceClient {
 	 * @return
 	 */
 	@RequestMapping(value = "/employee/", method = RequestMethod.POST)
-	public ResponseEntity<Void> insertEmployees(Employee employee) {
+	public ResponseEntity<Void> insertEmployees(@RequestBody Employee employee) {
 		ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
 		EmployeeServiceImpl empService = (EmployeeServiceImpl) context.getBean("employeeService");
 		empService.insertEmployee(employee);

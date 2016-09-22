@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.attendance.entity.Employee;
 import com.attendance.serviceImpl.EmployeeServiceImpl;
@@ -29,6 +28,8 @@ import org.springframework.http.HttpStatus;
 public class EmployeeAttendanceClient {
 
 	static final Logger logger = Logger.getLogger(EmployeeAttendanceClient.class);
+	
+	ApplicationContext context = null;
 
 	/**
 	 * Method to receive ResponseEntity POST requests and processes it saving to
@@ -40,7 +41,7 @@ public class EmployeeAttendanceClient {
 	 */
 	@RequestMapping(value = "/employee/", method = RequestMethod.POST)
 	public ResponseEntity<Void> insertEmployees(@RequestBody Employee employee) {
-		ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
+		 context = new ClassPathXmlApplicationContext("Beans.xml");
 		EmployeeServiceImpl empService = (EmployeeServiceImpl) context.getBean("employeeService");
 		empService.insertEmployee(employee);
 		return new ResponseEntity<Void>(HttpStatus.CREATED);

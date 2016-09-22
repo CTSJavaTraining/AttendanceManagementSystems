@@ -17,8 +17,16 @@ public class EmployeeId implements java.io.Serializable {
 	private String accessCardno;
 
 	public EmployeeId() {
+		/**
+		 * 
+		 */
 	}
 
+	/**
+	 * 
+	 * @param employeeid
+	 * @param accessCardno
+	 */
 	public EmployeeId(int employeeid, String accessCardno) {
 		this.employeeid = employeeid;
 		this.accessCardno = accessCardno;
@@ -42,10 +50,14 @@ public class EmployeeId implements java.io.Serializable {
 		this.accessCardno = accessCardno;
 	}
 
+	/**
+	 * 
+	 */
+	@Override
 	public boolean equals(Object other) {
-		if ((this == other))
+		if (this == other)
 			return true;
-		if ((other == null))
+		if (other == null)
 			return false;
 		if (!(other instanceof EmployeeId))
 			return false;
@@ -57,6 +69,10 @@ public class EmployeeId implements java.io.Serializable {
 								&& this.getAccessCardno().equals(castOther.getAccessCardno())));
 	}
 
+	/**
+	 * 
+	 */
+	@Override
 	public int hashCode() {
 		int result = 17;
 

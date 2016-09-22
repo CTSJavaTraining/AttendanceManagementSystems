@@ -44,7 +44,16 @@ public class Employee implements java.io.Serializable {
 		this.status = status;
 		this.usertype = usertype;
 	}
-
+/**
+ * 
+ * @param id
+ * @param machinedetails
+ * @param firstname
+ * @param lastname
+ * @param status
+ * @param usertype
+ * @param attendancedetailses
+ */
 	public Employee(EmployeeId id, MachineDetails machinedetails, String firstname, String lastname, String status,
 			String usertype, Set<AttendanceDetails> attendancedetailses) {
 		this.id = id;

@@ -1,5 +1,4 @@
 package com.attendance.entity;
-// Generated Sep 15, 2016 3:54:04 PM by Hibernate Tools 5.1.0.Beta1
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,7 +27,17 @@ public class MachineDetails implements java.io.Serializable {
 	private Set<Employee> employees = new HashSet<Employee>();
 
 	public MachineDetails() {
+		/**
+		 * 
+		 */
 	}
+
+	/**
+	 * 
+	 * @param machineId
+	 * @param location
+	 * @param machineType
+	 */
 
 	public MachineDetails(String machineId, String location, String machineType) {
 		this.machineId = machineId;
@@ -36,6 +45,14 @@ public class MachineDetails implements java.io.Serializable {
 		this.machineType = machineType;
 	}
 
+	/**
+	 * 
+	 * @param machineId
+	 * @param location
+	 * @param machineType
+	 * @param attendancedetailses
+	 * @param employees
+	 */
 	public MachineDetails(String machineId, String location, String machineType,
 			Set<AttendanceDetails> attendancedetailses, Set<Employee> employees) {
 		this.machineId = machineId;

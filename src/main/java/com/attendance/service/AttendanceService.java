@@ -19,13 +19,22 @@ public interface AttendanceService {
 	public void exportToExcel();
 
 	/**
+	 * Sets the attendance details with swipe in time of the employee and
+	 * inserts in DB.
 	 * 
-	 * Sets the list of attendance details of employee to insert in DB and
-	 * persist.
-	 * 
-	 * @param attendance
+	 * @param swipeIn
+	 * @throws Exception
 	 */
 
-	public void insertSwipeHours(AttendanceDetails attendance);
+	public void insertSwipeInHours(AttendanceDetails swipeIn) throws Exception;
+
+	/**
+	 * Sets the attendance details with swipe out time of the employee and
+	 * inserts in DB.
+	 * 
+	 * @param swipeOut
+	 * @throws Exception
+	 */
+	public void insertSwipeOutHours(AttendanceDetails swipeOut) throws Exception;
 
 }

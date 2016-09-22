@@ -1,9 +1,8 @@
 package com.attendance.DAOServiceImpl;
 
+
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import org.apache.log4j.Logger;
@@ -14,7 +13,8 @@ import com.attendance.util.JPAUtil;
 
 /**
  * 
- * AttendanceDAOImpl holds the implementation of methods used in AttendanceDAO interface.
+ * AttendanceDAOImpl holds the implementation of methods used in AttendanceDAO
+ * interface.
  *
  */
 public class AttendanceDAOImpl implements AttendanceDAO {
@@ -44,28 +44,30 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 
 	/**
 	 * 
-	 * Method to insert the swipe in time in the attendance
-	 * details of the employee. Persist the inserted values in DB.
+	 * Method to insert the swipe in time in the attendance details of the
+	 * employee. Persist the inserted values in DB.
 	 */
 
 	@Override
-	public void insertSwipeInHours(AttendanceDetails employee) throws Exception {
-	    Date date = new Date();
+	public void insertSwipeInHours(AttendanceDetails attendance) throws Exception {
+		Date date = new Date();
 		entityManager = JPAUtil.getEntityManager();
 		entityManager.getTransaction().begin();
-		getEmployee(employee.getEmployee().getId().getEmployeeid(),employee.getEmployee().getId().getAccessCardno());
-		validateEmployeeMachineDetails(employee.getEmployee().getId().getEmployeeid(),employee.getMachinedetails().getMachineId());
-		employee.setSwipeIn(date);
-		entityManager.persist(employee);
-		entityManager.getTransaction().commit();	
-		logger.info("Records inserted successfully");		
-		}
+		getEmployee(attendance.getEmployee().getId().getEmployeeid(), attendance.getEmployee().getId().getAccessCardno());
+		validateEmployeeMachineDetails(attendance.getEmployee().getId().getEmployeeid(),
+				attendance.getMachinedetails().getMachineId());
+		attendance.setSwipeIn(date);
+		entityManager.persist(attendance);
+		entityManager.getTransaction().commit();
+		logger.info("Records inserted successfully");
+	}
 
 	/**
 	 * 
 	 * Method to check for valid employee Id and access card. Throws exception
 	 * message incase of invalid input
-	 * @throws DAOException 
+	 * 
+	 * @throws DAOException
 	 */
 
 	@Override
@@ -90,34 +92,47 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 	}
 
 	@Override
-	public void insertSwipeOutHours(AttendanceDetails employee) throws Exception {
-		
+	public void insertSwipeOutHours(AttendanceDetails attendance) throws Exception {
+
 		entityManager = JPAUtil.getEntityManager();
 		entityManager.getTransaction().begin();
 		query = entityManager.createQuery(
-				"SELECT a.swipe_in FROM AttendanceDetails a WHERE a.employeeid= :id and e.access_cardno= :cardNo");
-		query.setParameter("id", employee.getEmployee().getId().getEmployeeid());
-		query.setParameter("cardNo", employee.getEmployee().getId().getAccessCardno());
+				"SELECT a.swipe_in FROM AttendanceDetails a WHERE a.employeeid= :id and a.access_cardno= :cardNo and a.swipe_in = :swipeIn and a.machine_id =:machineId");
+		query.setParameter("id", attendance.getEmployee().getId().getEmployeeid());
+		query.setParameter("cardNo", attendance.getEmployee().getId().getAccessCardno());
+		query.setParameter("machineId",attendance.getMachinedetails().getMachineId());
+		query.setParameter("swipeIn", attendance.getSwipeIn());
 		query.setParameter("status", "Y");
-		
-		
+
 	}
 
 	@Override
-	public int calculateTotalHours(Date swipeInTime, Date swipeOutTime) throws Exception {
+	public String calculateTotalHours(Date swipeInTime, Date swipeOutTime) throws Exception {
+		String totalHoursLogged;
+		 long timeDifference = swipeInTime.getTime() - swipeOutTime.getTime();
+		  
+		    long diffMinutes = timeDifference / (60 * 1000) % 60;
+		    long diffHours = timeDifference / (60 * 60 * 1000);
+		     
 		
+		    	totalHoursLogged = diffHours+"h"+" "+diffMinutes+"m";
+		   
+		   
+		     return totalHoursLogged;
+		    
+		    
+	}
+
+	@Override
+	public int calculateWeekAverage() throws Exception {
+		
+
 		return 0;
 	}
 
 	@Override
-	public int calculateWeekAverage(int totalHours) throws Exception {
-		
-		return 0;
-	}
+	public void validateEmployeeMachineDetails(int empId, String machineId) throws DAOException {
 
-	@Override
-	public void validateEmployeeMachineDetails(int empId, String machineId) throws DAOException  {
-		
 		logger.debug("The given Employee ID is:" + empId);
 		logger.debug("The given Machine ID is:" + machineId);
 
@@ -130,14 +145,11 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 		query.setParameter("activate_status", "Y");
 		int validMachine = query.getResultList().size();
 		if (validMachine == 0) {
-			throw new DAOException(
-					"The given machine ID "+machineId+ "is not mapped to employee" +empId);
+			throw new DAOException("The given machine ID " + machineId + "is not mapped to employee" + empId);
 		} else {
 			logger.info("Machine Details validated for Employee Successfully");
 		}
-		
-		
-		
+
 	}
 
 }

@@ -16,7 +16,7 @@ public interface EmployeeDAO {
 	/**
 	 * Sets the list of employees as input to insert into DB and persist.
 	 * 
-	 * @param emplist
+	 * @param employee
 	 * @throws Exception
 	 */
 
@@ -27,6 +27,6 @@ public interface EmployeeDAO {
 	 * @param empId
 	 */
 
-	public void deleteEmployee(EmployeeId empId);
+	public void deleteEmployee(EmployeeId empId) throws Exception;
 
 }

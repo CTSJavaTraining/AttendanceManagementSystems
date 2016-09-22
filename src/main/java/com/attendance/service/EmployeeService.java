@@ -6,6 +6,7 @@ package com.attendance.service;
 import com.attendance.entity.Employee;
 import com.attendance.entity.EmployeeId;
 
+
 /**
  * @author 542320 
  * Holds the method signature to be implemented by the EmployeeServiceImpl.
@@ -19,7 +20,7 @@ public interface EmployeeService {
 	 * @param empList
 	 */
 
-	public void insertEmployee(Employee employee);
+	public void insertEmployee(Employee employee)throws Exception;
 
 	/**
 	 * 
@@ -28,7 +29,7 @@ public interface EmployeeService {
 	 * @param empId
 	 */
 
-	public void deleteEmployee(EmployeeId empId);
+	public void deleteEmployee(EmployeeId empId)throws Exception;
 	
 	/**
 	 * Returns the random generated value.
@@ -36,5 +37,7 @@ public interface EmployeeService {
 	 */
 	
 	public String generateAccessCard();
+	
+
 
 }

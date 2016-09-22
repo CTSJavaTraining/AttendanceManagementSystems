@@ -15,19 +15,20 @@ import com.attendance.DAOServiceImpl.AttendanceDAOImpl;
 import com.attendance.entity.AttendanceDetails;
 import com.attendance.service.AttendanceService;
 
-
-
-
 /**
- * @author 542320 
- * AttendanceServiceImpl holds the implementation of methods used  in AttendanceDAO interface.
- *        
+ * @author 542320 AttendanceServiceImpl holds the implementation of methods used
+ *         in AttendanceDAO interface.
+ * 
  */
 
 public class AttendanceServiceImpl implements AttendanceService {
 
 	static final Logger logger = Logger.getLogger(AttendanceService.class);
-	
+
+	private static final String propertyFile = "Beans.xml";
+
+	private static final String beanName = "attendance";
+
 	ApplicationContext context = null;
 
 	/**
@@ -40,9 +41,9 @@ public class AttendanceServiceImpl implements AttendanceService {
 		List<AttendanceDetails> attendanceList = new ArrayList<AttendanceDetails>();
 
 		try {
-			 context = new ClassPathXmlApplicationContext("Beans.xml");
+			context = new ClassPathXmlApplicationContext(propertyFile);
 
-			AttendanceDAOImpl attendanceDAO = (AttendanceDAOImpl) context.getBean("attendance");
+			AttendanceDAOImpl attendanceDAO = (AttendanceDAOImpl) context.getBean(beanName);
 			attendanceList = attendanceDAO.getAttendanceDetails();
 
 			// Blank workbook
@@ -85,24 +86,34 @@ public class AttendanceServiceImpl implements AttendanceService {
 	}
 
 	/**
-	 * Method to pass the attendance details of the employees and invoke the DAO method to persist.
+	 * Method to insert the swipe in hours in DB calling the method in DAO
+	 * layer.
 	 */
+
 	@Override
-	public void insertSwipeHours(AttendanceDetails attendance) {
-		
-		try {
-			 context = new ClassPathXmlApplicationContext("Beans.xml");
+	public void insertSwipeInHours(AttendanceDetails attendance) throws Exception {
 
-			AttendanceDAOImpl attendanceDAO = (AttendanceDAOImpl) context.getBean("attendance");
-			attendanceDAO.insertSwipeInHours(attendance);
-		} catch (Exception e) {
+		context = new ClassPathXmlApplicationContext(propertyFile);
 
-			logger.error("Encountered exception:" + e);
-		}
-		
+		AttendanceDAOImpl attendanceDAO = (AttendanceDAOImpl) context.getBean(beanName);
+
+		attendanceDAO.insertSwipeInHours(attendance);
 
 	}
 
+	/**
+	 * Method to insert the swipe out hours in DB calling the method in DAO
+	 * layer.
+	 */
+	@Override
+	public void insertSwipeOutHours(AttendanceDetails attendance) throws Exception {
 
+		context = new ClassPathXmlApplicationContext(propertyFile);
+
+		AttendanceDAOImpl attendanceDAO = (AttendanceDAOImpl) context.getBean(beanName);
+
+		attendanceDAO.insertSwipeOutHours(attendance);
+
+	}
 
 }

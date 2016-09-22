@@ -56,9 +56,9 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 	 */
 
 	@Override
-	public void deleteEmployee(EmployeeId empId) {
+	public void deleteEmployee(EmployeeId empId) throws Exception {
 
-		try {
+		
 			entityManager = JPAUtil.getEntityManager();
 			entityManager.getTransaction().begin();
 			logger.debug("Employee Id given:" + empId);
@@ -72,9 +72,6 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 			} else {
 				logger.info("Entered EmpId is invalid.No such data present in DB");
 			}
-		} catch (Exception e) {
-			logger.error("Exception occurred:" + e);
-		}
 	}
 
 }

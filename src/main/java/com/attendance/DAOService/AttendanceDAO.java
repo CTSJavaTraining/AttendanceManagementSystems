@@ -62,7 +62,7 @@ public interface AttendanceDAO {
 	 * @throws Exception
 	 */
 
-	public int calculateTotalHours(Date swipeInTime, Date swipeOutTime) throws Exception;
+	public String calculateTotalHours(Date swipeInTime, Date swipeOutTime) throws Exception;
 
 	/**
 	 * Sets the total hours per day to calculate the average hours per week.
@@ -72,16 +72,17 @@ public interface AttendanceDAO {
 	 * @throws Exception
 	 */
 
-	public int calculateWeekAverage(int totalHours) throws Exception;
+	public int calculateWeekAverage() throws Exception;
 
 	/**
 	 * MachineId passed as input to validate whether employee has been mapped to
 	 * the given machine.
 	 * 
 	 * @param machineId
+	 * @param empId
 	 * @throws Exception
 	 */
 
-	public void validateEmployeeMachineDetails(int empId,String machineId) throws DAOException;
+	public void validateEmployeeMachineDetails(int empId, String machineId) throws DAOException;
 
 }

@@ -6,6 +6,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -21,10 +24,10 @@ public class MachineDetails implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private String machineId;
-	private String location;
-	private String machineType;
-	private Set<AttendanceDetails> attendancedetailses = new HashSet<AttendanceDetails>();
-	private Set<Employee> employees = new HashSet<Employee>();
+	private Employee employee;
+	private LocationDetails locationdetails;
+	private String activationStatus;
+	private Set attendancedetailses = new HashSet(0);
 
 	public MachineDetails() {
 		/**
@@ -41,8 +44,7 @@ public class MachineDetails implements java.io.Serializable {
 
 	public MachineDetails(String machineId, String location, String machineType) {
 		this.machineId = machineId;
-		this.location = location;
-		this.machineType = machineType;
+		this.employee = employee;
 	}
 
 	/**
@@ -56,14 +58,13 @@ public class MachineDetails implements java.io.Serializable {
 	public MachineDetails(String machineId, String location, String machineType,
 			Set<AttendanceDetails> attendancedetailses, Set<Employee> employees) {
 		this.machineId = machineId;
-		this.location = location;
-		this.machineType = machineType;
+		this.employee = employee;
+		this.locationdetails = locationdetails;
+		this.activationStatus = activationStatus;
 		this.attendancedetailses = attendancedetailses;
-		this.employees = employees;
 	}
 
 	@Id
-
 	@Column(name = "machine_id", unique = true, nullable = false, length = 20)
 	public String getMachineId() {
 		return this.machineId;
@@ -73,22 +74,34 @@ public class MachineDetails implements java.io.Serializable {
 		this.machineId = machineId;
 	}
 
-	@Column(name = "location", nullable = false, length = 20)
-	public String getLocation() {
-		return this.location;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumns({ @JoinColumn(name = "employeeid", referencedColumnName = "employeeid", nullable = false),
+			@JoinColumn(name = "access_cardno", referencedColumnName = "access_cardno", nullable = false) })
+	public Employee getEmployee() {
+		return this.employee;
 	}
 
-	public void setLocation(String location) {
-		this.location = location;
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
 	}
 
-	@Column(name = "machine_type", nullable = false, length = 20)
-	public String getMachineType() {
-		return this.machineType;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "locationId")
+	public LocationDetails getLocationdetails() {
+		return this.locationdetails;
 	}
 
-	public void setMachineType(String machineType) {
-		this.machineType = machineType;
+	public void setLocationdetails(LocationDetails locationdetails) {
+		this.locationdetails = locationdetails;
+	}
+
+	@Column(name = "activation_status", length = 5)
+	public String getActivationStatus() {
+		return this.activationStatus;
+	}
+
+	public void setActivationStatus(String activationStatus) {
+		this.activationStatus = activationStatus;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "machinedetails")
@@ -98,15 +111,6 @@ public class MachineDetails implements java.io.Serializable {
 
 	public void setAttendancedetailses(Set<AttendanceDetails> attendancedetailses) {
 		this.attendancedetailses = attendancedetailses;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "machinedetails")
-	public Set<Employee> getEmployees() {
-		return this.employees;
-	}
-
-	public void setEmployees(Set<Employee> employees) {
-		this.employees = employees;
 	}
 
 }

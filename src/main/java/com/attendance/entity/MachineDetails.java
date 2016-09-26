@@ -27,7 +27,7 @@ public class MachineDetails implements java.io.Serializable {
 	private Employee employee;
 	private LocationDetails locationdetails;
 	private String activationStatus;
-	private Set attendancedetailses = new HashSet(0);
+	private Set<AttendanceDetails> attendancedetailses = new HashSet<AttendanceDetails>();
 
 	public MachineDetails() {
 		/**

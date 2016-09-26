@@ -1,8 +1,7 @@
 package com.attendance.entity;
 
 import java.util.Date;
-//import java.util.HashSet;
-//import java.util.Set;
+
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
@@ -11,7 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-//import javax.persistence.OneToMany;
+
 import javax.persistence.Table;
 import javax.validation.constraints.Pattern;
 

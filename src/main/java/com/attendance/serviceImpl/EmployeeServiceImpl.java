@@ -3,27 +3,27 @@
  */
 package com.attendance.serviceImpl;
 
-import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
-import org.apache.log4j.Logger;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.attendance.DAOServiceImpl.EmployeeDAOImpl;
 import com.attendance.entity.Employee;
 import com.attendance.entity.EmployeeId;
-
 import com.attendance.service.EmployeeService;
+import com.attendance.util.Utility;
 
 /**
  * @author 542320 EmployeeServiceImpl holds the implementation of methods used
  *         in EmployeeDAO interface.
  * 
  */
+@Component
 public class EmployeeServiceImpl implements EmployeeService {
 
-	static final Logger logger = Logger.getLogger(EmployeeServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(EmployeeServiceImpl.class);
 
-	ApplicationContext context = null;
+	private EmployeeDAOImpl employeeDAOImpl;
 
 	/**
 	 * 
@@ -35,23 +35,17 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public void insertEmployee(Employee employee) throws Exception {
 
-		context = new ClassPathXmlApplicationContext("Beans.xml");
+		employee.getId().setAccessCardno(Utility.generateAccessCard());
 
-		EmployeeDAOImpl emp = (EmployeeDAOImpl) context.getBean("employee");
-
-		String accessCard = generateAccessCard();
-
-		employee.getId().setAccessCardno(accessCard);
-		
 		employee.setFirstname(employee.getFirstname().trim());
-		
+
 		employee.setLastname(employee.getLastname().trim());
-		
+
 		employee.setStatus(employee.getStatus().trim());
-		
+
 		employee.setUsertype(employee.getUsertype().trim());
 
-		emp.insertEmployee(employee);
+		employeeDAOImpl.insertEmployee(employee);
 
 	}
 
@@ -65,26 +59,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public void deleteEmployee(EmployeeId empId) throws Exception {
 
-		context = new ClassPathXmlApplicationContext("Beans.xml");
+		employeeDAOImpl.deleteEmployee(empId);
 
-		EmployeeDAOImpl emp = (EmployeeDAOImpl) context.getBean("employee");
-
-		emp.deleteEmployee(empId);
-
-	}
-
-	/**
-	 * Returns the random generated string value.
-	 * 
-	 * @return String
-	 */
-
-	@Override
-	public String generateAccessCard() {
-
-		String randomStr = UUID.randomUUID().toString();
-
-		return randomStr;
 	}
 
 }

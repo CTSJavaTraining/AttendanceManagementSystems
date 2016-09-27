@@ -1,16 +1,12 @@
 package com.attendance.service;
 
-
-import java.util.List;
-
 import com.attendance.entity.AttendanceDetails;
-import com.attendance.entity.Employee;
 
 /**
  * 
- * @author 542320 
- * Holds the method signature to be implemented by the  AttendanceServiceImpl
- *        
+ * @author 542320 Holds the method signature to be implemented by the
+ *         AttendanceServiceImpl
+ * 
  */
 public interface AttendanceService {
 
@@ -39,7 +35,5 @@ public interface AttendanceService {
 	 * @throws Exception
 	 */
 	public void insertSwipeOutHours(AttendanceDetails swipeOut) throws Exception;
-	
-
 
 }

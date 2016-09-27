@@ -10,7 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
 import javax.persistence.Table;
 import javax.validation.constraints.Pattern;
 
@@ -42,11 +41,11 @@ public class Employee implements java.io.Serializable {
 	@NotBlank(message = "UserType must not be blank!")
 	@Pattern(regexp = "[^A-Za-z0-9]", message = "Please enter the value in the format - 'Permanent' or 'Contract'.")
 	private String usertype;
-	//private Set<AttendanceDetails> attendancedetailses = new HashSet<AttendanceDetails>();
+	// private Set<AttendanceDetails> attendancedetailses = new
+	// HashSet<AttendanceDetails>();
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "locationId", nullable = false)
 	private LocationDetails locationdetails;
-	
 
 	private Date joining_date;
 
@@ -94,12 +93,9 @@ public class Employee implements java.io.Serializable {
 		this.id = id;
 	}
 
-
 	public LocationDetails getLocationDetails() {
 		return this.locationdetails;
 	}
-	
-
 
 	public void setLocationDetails(LocationDetails locationdetails) {
 		this.locationdetails = locationdetails;
@@ -141,13 +137,14 @@ public class Employee implements java.io.Serializable {
 		this.usertype = usertype;
 	}
 
-	//@OneToMany(fetch = FetchType.LAZY, mappedBy = "employee")
-	//public Set<AttendanceDetails> getAttendancedetailses() {
-		//return this.attendancedetailses;
-	//}
+	// @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee")
+	// public Set<AttendanceDetails> getAttendancedetailses() {
+	// return this.attendancedetailses;
+	// }
 
-	//public void setAttendancedetailses(Set<AttendanceDetails> attendancedetailses) {
-		//this.attendancedetailses = attendancedetailses;
-	//}
+	// public void setAttendancedetailses(Set<AttendanceDetails>
+	// attendancedetailses) {
+	// this.attendancedetailses = attendancedetailses;
+	// }
 
 }

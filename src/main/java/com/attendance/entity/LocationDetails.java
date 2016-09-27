@@ -1,6 +1,5 @@
 package com.attendance.entity;
 
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,7 +36,7 @@ public class LocationDetails implements java.io.Serializable {
 	@OneToMany(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "locationId")
 	private List<Employee> employees;
-	  @ElementCollection(targetClass=Employee.class)
+	@ElementCollection(targetClass = Employee.class)
 	private Set<MachineDetails> machinedetailses = new HashSet<MachineDetails>();
 
 	public LocationDetails() {
@@ -51,8 +50,8 @@ public class LocationDetails implements java.io.Serializable {
 		this.wing = wing;
 	}
 
-	public LocationDetails(long locationId, String locationName, String block, String floor, String wing, List<Employee> employees,
-			Set<MachineDetails> machinedetailses) {
+	public LocationDetails(long locationId, String locationName, String block, String floor, String wing,
+			List<Employee> employees, Set<MachineDetails> machinedetailses) {
 		this.locationId = locationId;
 		this.locationName = locationName;
 		this.block = block;
@@ -61,7 +60,6 @@ public class LocationDetails implements java.io.Serializable {
 		this.employees = employees;
 		this.machinedetailses = machinedetailses;
 	}
-
 
 	public long getLocationId() {
 		return this.locationId;
@@ -107,12 +105,10 @@ public class LocationDetails implements java.io.Serializable {
 		this.wing = wing;
 	}
 
-	
 	public List<Employee> getEmployees() {
 		return this.employees;
 	}
 
-	
 	public void setEmployees(List<Employee> employees) {
 		this.employees = employees;
 	}

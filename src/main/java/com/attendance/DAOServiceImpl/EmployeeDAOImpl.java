@@ -3,8 +3,12 @@
  */
 package com.attendance.DAOServiceImpl;
 
-import org.apache.log4j.Logger;
 import javax.persistence.EntityManager;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
 import com.attendance.DAOService.EmployeeDAO;
 import com.attendance.entity.Employee;
 import com.attendance.entity.EmployeeId;
@@ -15,12 +19,12 @@ import com.attendance.util.JPAUtil;
  *         EmployeeDAO interface.
  *
  */
-
+@Component
 public class EmployeeDAOImpl implements EmployeeDAO {
 
-	static final Logger logger = Logger.getLogger(EmployeeDAOImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(EmployeeDAOImpl.class);
 
-	EntityManager entityManager = null;
+	private EntityManager entityManager = null;
 
 	/**
 	 * 
@@ -52,7 +56,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
 		entityManager = JPAUtil.getEntityManager();
 		entityManager.getTransaction().begin();
-		logger.debug("Employee Id given:" + empId);
+		logger.debug("Employee Id given:{}", empId);
 		Employee emp = entityManager.find(Employee.class, empId);
 		if (emp != null) {
 

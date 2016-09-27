@@ -3,15 +3,11 @@
  */
 package com.attendance.timer;
 
-
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.log4j.Logger;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 import com.attendance.DAOServiceImpl.AttendanceDAOImpl;
 
@@ -19,27 +15,19 @@ import com.attendance.DAOServiceImpl.AttendanceDAOImpl;
  * @author 523696
  *
  */
+@Component
 public class DeleteTimer {
-	
-	static final Logger logger = Logger.getLogger(DeleteTimer.class);
-	
-	ApplicationContext context = null;
-	
-	private static final String propertyFile = "Beans.xml";
 
-	private static final String beanName = "attendance";
-	
-	@Scheduled(cron="0 0 16 ? 1/6 MON#1 *")
-	public void deleteAttendanceDetails() throws Exception
-	{
+	private static final Logger logger = LoggerFactory.getLogger(DeleteTimer.class);
+
+	@Autowired
+	private AttendanceDAOImpl attendanceDAO;
+
+	@Scheduled(cron = "0 0 16 ? 1/6 MON#1 *")
+	public void deleteAttendanceDetails() throws Exception {
 		logger.info("Delete record every six months for inactive employees");
-		List<Integer> employeeIds = new ArrayList<Integer>();
-		context = new ClassPathXmlApplicationContext(propertyFile);
+		attendanceDAO.getInactiveEmployees();
 
-		AttendanceDAOImpl attendanceDAO = (AttendanceDAOImpl) context.getBean(beanName);
-		employeeIds = attendanceDAO.getInactiveEmployees();
-		
-		
 	}
 
 }

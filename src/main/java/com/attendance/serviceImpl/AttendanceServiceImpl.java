@@ -2,14 +2,16 @@ package com.attendance.serviceImpl;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import org.apache.log4j.Logger;
+
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.attendance.DAOServiceImpl.AttendanceDAOImpl;
 import com.attendance.entity.AttendanceDetails;
@@ -21,15 +23,13 @@ import com.attendance.service.AttendanceService;
  * 
  */
 
+@Component
 public class AttendanceServiceImpl implements AttendanceService {
 
-	static final Logger logger = Logger.getLogger(AttendanceService.class);
+	private static final Logger logger = LoggerFactory.getLogger(AttendanceService.class);
 
-	private static final String propertyFile = "Beans.xml";
-
-	private static final String beanName = "attendance";
-
-	ApplicationContext context = null;
+	@Autowired
+	private AttendanceDAOImpl attendanceDAOImpl;
 
 	/**
 	 * Method to get the attendance details and save it as excel.
@@ -38,13 +38,11 @@ public class AttendanceServiceImpl implements AttendanceService {
 	@Override
 	public void exportToExcel() {
 
-		List<AttendanceDetails> attendanceList = new ArrayList<AttendanceDetails>();
+		List<AttendanceDetails> attendanceList = Collections.emptyList();
 
 		try {
-			context = new ClassPathXmlApplicationContext(propertyFile);
 
-			AttendanceDAOImpl attendanceDAO = (AttendanceDAOImpl) context.getBean(beanName);
-			attendanceList = attendanceDAO.getAttendanceDetails();
+			attendanceList = attendanceDAOImpl.getAttendanceDetails();
 
 			// Blank workbook
 			XSSFWorkbook workbook = new XSSFWorkbook();
@@ -79,7 +77,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 		} catch (Exception e) {
 
-			logger.error("Encountered exception:" + e);
+			logger.error("Encountered exception:" , e);
 
 		}
 
@@ -93,11 +91,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 	@Override
 	public void insertSwipeInHours(AttendanceDetails attendance) throws Exception {
 
-		context = new ClassPathXmlApplicationContext(propertyFile);
-
-		AttendanceDAOImpl attendanceDAO = (AttendanceDAOImpl) context.getBean(beanName);
-
-		attendanceDAO.insertSwipeInHours(attendance);
+		attendanceDAOImpl.insertSwipeInHours(attendance);
 
 	}
 
@@ -108,11 +102,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 	@Override
 	public void insertSwipeOutHours(AttendanceDetails attendance) throws Exception {
 
-		context = new ClassPathXmlApplicationContext(propertyFile);
-
-		AttendanceDAOImpl attendanceDAO = (AttendanceDAOImpl) context.getBean(beanName);
-
-		attendanceDAO.insertSwipeOutHours(attendance);
+		attendanceDAOImpl.insertSwipeOutHours(attendance);
 
 	}
 

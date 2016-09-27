@@ -2,8 +2,8 @@ package com.attendance.exception;
 
 /**
  * 
- * @author 542320 
- * User defined exception class to modify the system generated message by user defined message.
+ * @author 542320 User defined exception class to modify the system generated
+ *         message by user defined message.
  *
  */
 

@@ -1,10 +1,11 @@
 package com.attendance.client;
 
-import org.springframework.boot.*;
-import org.springframework.boot.autoconfigure.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
-import org.apache.log4j.Logger;
-
+import org.springframework.context.annotation.ImportResource;
 
 /**
  * 
@@ -14,10 +15,10 @@ import org.apache.log4j.Logger;
  */
 @ComponentScan
 @SpringBootApplication
-
+@ImportResource("classpath:Beans.xml")
 public class SpringBoot {
 
-	static final Logger logger = Logger.getLogger(SpringBoot.class);
+	private static final Logger logger = LoggerFactory.getLogger(SpringBoot.class);
 
 	/**
 	 * Passing the startup class as argument to automatically start the tomcat
@@ -29,6 +30,7 @@ public class SpringBoot {
 
 	public static void main(String[] args) throws Exception {
 
+		logger.info("Application started...");
 		SpringApplication.run(SpringBoot.class, args);
 
 	}

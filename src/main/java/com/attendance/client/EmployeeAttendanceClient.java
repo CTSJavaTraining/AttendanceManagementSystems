@@ -5,11 +5,12 @@ package com.attendance.client;
 
 import javax.validation.Valid;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,8 +25,6 @@ import com.attendance.serviceImpl.AttendanceServiceImpl;
 import com.attendance.serviceImpl.EmployeeServiceImpl;
 import com.attendance.timer.DeleteTimer;
 
-import org.springframework.http.HttpStatus;
-
 /**
  * @author 542320 EmployeeAttendanceClient is a standalone java class using REST
  *         service to invoke the respective methods.
@@ -36,11 +35,14 @@ import org.springframework.http.HttpStatus;
 @RestController
 public class EmployeeAttendanceClient {
 
-	static final Logger logger = Logger.getLogger(EmployeeAttendanceClient.class);
+	private static final Logger logger = LoggerFactory.getLogger(EmployeeAttendanceClient.class);
 
-	ApplicationContext context = null;
-
-	private static final String propertyFile = "Beans.xml";
+	@Autowired
+	private EmployeeServiceImpl employeeServiceImpl;
+	@Autowired
+	private AttendanceServiceImpl attendanceServiceImpl;
+	@Autowired
+	private DeleteTimer deleteTimer;
 
 	/**
 	 * Method to receive ResponseEntity POST requests and processes it saving to
@@ -53,13 +55,11 @@ public class EmployeeAttendanceClient {
 	 */
 	@RequestMapping(value = "/insertemployee", method = RequestMethod.POST)
 	public ResponseEntity<Void> insertEmployees(@Valid @RequestBody Employee employee) {
-		context = new ClassPathXmlApplicationContext(propertyFile);
-		EmployeeServiceImpl empService = (EmployeeServiceImpl) context.getBean("employeeService");
 		try {
-			empService.insertEmployee(employee);
+			employeeServiceImpl.insertEmployee(employee);
 		} catch (Exception e) {
 
-			logger.error(e);
+			logger.error("", e);
 		}
 		return new ResponseEntity<Void>(HttpStatus.CREATED);
 	}
@@ -74,13 +74,11 @@ public class EmployeeAttendanceClient {
 
 	@RequestMapping(value = "/deleteemployee/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<Employee> deleteEmployees(@PathVariable("id") EmployeeId id) {
-		context = new ClassPathXmlApplicationContext(propertyFile);
-		EmployeeServiceImpl empService = (EmployeeServiceImpl) context.getBean("employeeService");
 		try {
-			empService.deleteEmployee(id);
+			employeeServiceImpl.deleteEmployee(id);
 		} catch (Exception e) {
 
-			logger.error(e);
+			logger.error("", e);
 		}
 		return new ResponseEntity<Employee>(HttpStatus.NO_CONTENT);
 	}
@@ -97,12 +95,10 @@ public class EmployeeAttendanceClient {
 	public ResponseEntity<Void> insertSwipeInHours(@RequestBody AttendanceDetails swipeIn) {
 
 		try {
-			context = new ClassPathXmlApplicationContext(propertyFile);
-			AttendanceServiceImpl attendanceService = (AttendanceServiceImpl) context.getBean("attendance");
-			attendanceService.insertSwipeInHours(swipeIn);
+			attendanceServiceImpl.insertSwipeInHours(swipeIn);
 		} catch (Exception e) {
 
-			logger.error(e);
+			logger.error("", e);
 		}
 		return new ResponseEntity<Void>(HttpStatus.CREATED);
 	}
@@ -117,31 +113,27 @@ public class EmployeeAttendanceClient {
 
 	@RequestMapping(value = "/insertswipeout", method = RequestMethod.POST)
 	public ResponseEntity<Void> insertSwipeOutHours(@RequestBody AttendanceDetails swipeOut) {
-		context = new ClassPathXmlApplicationContext(propertyFile);
-		AttendanceServiceImpl attendanceService = (AttendanceServiceImpl) context.getBean("attendance");
 		try {
-			attendanceService.insertSwipeOutHours(swipeOut);
+			attendanceServiceImpl.insertSwipeOutHours(swipeOut);
 		} catch (Exception e) {
 
-			logger.error(e);
+			logger.error("", e);
 		}
 		return new ResponseEntity<Void>(HttpStatus.CREATED);
 	}
-	
+
 	/**
 	 * 
 	 * @return
 	 */
-	
+
 	@RequestMapping(value = "/deletePastRecords", method = RequestMethod.DELETE)
 	public ResponseEntity<Void> deleteAttendanceDetails() {
-		context = new ClassPathXmlApplicationContext(propertyFile);
-		DeleteTimer deleteRecord = (DeleteTimer) context.getBean("deleteTimer");
 		try {
-			 deleteRecord.deleteAttendanceDetails();
+			deleteTimer.deleteAttendanceDetails();
 		} catch (Exception e) {
 
-			logger.error(e);
+			logger.error("", e);
 		}
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}

@@ -1,18 +1,22 @@
 package com.attendance.DAOServiceImpl;
 
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import org.apache.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
 import com.attendance.DAOService.AttendanceDAO;
 import com.attendance.entity.AttendanceDetails;
-import com.attendance.entity.Employee;
 import com.attendance.entity.EmployeeId;
 import com.attendance.exception.DAOException;
 import com.attendance.util.JPAUtil;
+import com.attendance.util.Utility;
 
 /**
  * 
@@ -20,13 +24,12 @@ import com.attendance.util.JPAUtil;
  * interface.
  *
  */
+@Component
 public class AttendanceDAOImpl implements AttendanceDAO {
 
-	static final Logger logger = Logger.getLogger(AttendanceDAOImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(AttendanceDAOImpl.class);
 
-	EntityManager entityManager = null;
-
-	Query query = null;
+	private EntityManager entityManager = null;
 
 	/**
 	 * 
@@ -34,15 +37,15 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 	 * the details fetched as list.
 	 */
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<AttendanceDetails> getAttendanceDetails() throws Exception {
 
 		entityManager = JPAUtil.getEntityManager();
 		entityManager.getTransaction().begin();
-		query = entityManager.createQuery("SELECT attendance FROM AttendanceDetails attendance");
+		Query query = entityManager.createQuery("SELECT attendance FROM AttendanceDetails attendance");
 
-		List<AttendanceDetails> resultList = (List<AttendanceDetails>) query.getResultList();
-		return resultList;
+		return (List<AttendanceDetails>) query.getResultList();
 	}
 
 	/**
@@ -53,13 +56,12 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 
 	@Override
 	public void insertSwipeInHours(AttendanceDetails attendance) throws Exception {
-		Date date = new Date();
 		entityManager = JPAUtil.getEntityManager();
 		entityManager.getTransaction().begin();
-		getEmployee(attendance.getEmployee().getId().getEmployeeid(), attendance.getEmployee().getId().getAccessCardno());
-		validateEmployeeMachineDetails(attendance.getEmployee().getId().getEmployeeid(),
-				attendance.getMachinedetails().getMachineId());
-		attendance.setSwipeIn(date);
+		EmployeeId id = attendance.getEmployee().getId();
+		getEmployee(id.getEmployeeid(), id.getAccessCardno());
+		validateEmployeeMachineDetails(id.getEmployeeid(), attendance.getMachinedetails().getMachineId());
+		attendance.setSwipeIn(Utility.getCurrentDate());
 		entityManager.persist(attendance);
 		entityManager.getTransaction().commit();
 		logger.info("Records inserted successfully");
@@ -75,11 +77,12 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 
 	@Override
 	public void getEmployee(int empId, String cardno) throws DAOException {
-		logger.debug("The given Employee ID is:" + empId);
+		logger.debug("The given Employee ID is: {}", empId);
 
 		entityManager = JPAUtil.getEntityManager();
 		entityManager.getTransaction().begin();
-		query = entityManager.createQuery(
+		// TODO: Wrong query employee_id is not available in POJO class
+		Query query = entityManager.createQuery(
 				"SELECT e FROM Employee e WHERE e.employee_id= :id and e.access_cardno= :cardNo and e.active_status= :status");
 		query.setParameter("id", empId);
 		query.setParameter("cardNo", cardno);
@@ -99,11 +102,12 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 
 		entityManager = JPAUtil.getEntityManager();
 		entityManager.getTransaction().begin();
-		query = entityManager.createQuery(
+		Query query = entityManager.createQuery(
 				"SELECT a.swipe_in FROM AttendanceDetails a WHERE a.employeeid= :id and a.access_cardno= :cardNo and a.swipe_in = :swipeIn and a.machine_id =:machineId");
-		query.setParameter("id", attendance.getEmployee().getId().getEmployeeid());
-		query.setParameter("cardNo", attendance.getEmployee().getId().getAccessCardno());
-		query.setParameter("machineId",attendance.getMachinedetails().getMachineId());
+		EmployeeId id = attendance.getEmployee().getId();
+		query.setParameter("id", id.getEmployeeid());
+		query.setParameter("cardNo", id.getAccessCardno());
+		query.setParameter("machineId", attendance.getMachinedetails().getMachineId());
 		query.setParameter("swipeIn", attendance.getSwipeIn());
 		query.setParameter("status", "Y");
 
@@ -111,24 +115,15 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 
 	@Override
 	public String calculateTotalHours(Date swipeInTime, Date swipeOutTime) throws Exception {
-		String totalHoursLogged;
-		 long timeDifference = swipeInTime.getTime() - swipeOutTime.getTime();
-		  
-		    long diffMinutes = timeDifference / (60 * 1000) % 60;
-		    long diffHours = timeDifference / (60 * 60 * 1000);
-		     
-		
-		    	totalHoursLogged = diffHours+"h"+" "+diffMinutes+"m";
-		   
-		   
-		     return totalHoursLogged;
-		    
-		    
+		long timeDifference = swipeInTime.getTime() - swipeOutTime.getTime();
+		long diffMinutes = timeDifference / (60 * 1000) % 60;
+		long diffHours = timeDifference / (60 * 60 * 1000);
+		return diffHours + "h" + " " + diffMinutes + "m";
+
 	}
 
 	@Override
 	public int calculateWeekAverage() throws Exception {
-		
 
 		return 0;
 	}
@@ -136,12 +131,11 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 	@Override
 	public void validateEmployeeMachineDetails(int empId, String machineId) throws DAOException {
 
-		logger.debug("The given Employee ID is:" + empId);
-		logger.debug("The given Machine ID is:" + machineId);
+		logger.debug("The given Employee ID is: {},The given Machine ID is:{}", empId, machineId);
 
 		entityManager = JPAUtil.getEntityManager();
 		entityManager.getTransaction().begin();
-		query = entityManager.createQuery(
+		Query query = entityManager.createQuery(
 				"SELECT machine FROM machinedetails machine WHERE machine.employee_id= :empId and machine.machine_Id= :machineId and machine.activate_status= :activate_status");
 		query.setParameter("empId", empId);
 		query.setParameter("machineId", machineId);
@@ -157,58 +151,49 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 
 	@Override
 	public List<Integer> getInactiveEmployees() throws Exception {
-		
-		List<Integer> employeeIds = new ArrayList<Integer>();
-		
+
 		entityManager = JPAUtil.getEntityManager();
 		entityManager.getTransaction().begin();
-		query = entityManager.createQuery("SELECT e.employee_id FROM Employee e WHERE  e.active_status= :status and DATE_ADD(e.relieving_date,INTERVAL 6 MONTH) = DATE(NOW())");
+		Query query = entityManager.createQuery(
+				"SELECT e.employee_id FROM Employee e WHERE  e.active_status= :status and DATE_ADD(e.relieving_date,INTERVAL 6 MONTH) = DATE(NOW())");
 		query.setParameter("status", "INACTIVE");
 		int employeeSize = query.getResultList().size();
-		List<Integer> employeeIdList = (List<Integer>)query.getResultList();
-		
+		// TODO: Y reading from one list and moving data to other list?? need??
+		@SuppressWarnings("unchecked")
+		List<Integer> employeeIdList = (List<Integer>) query.getResultList();
+		List<Integer> employeeIds = new ArrayList<>();
+
 		if (employeeSize > 0) {
-			
-			employeeIdList.forEach( (emp) -> {
-				
-					
+			employeeIdList.forEach((emp) -> {
+
 				employeeIds.add(emp);
-					
-				
-			
-			} );
-			
+
+			});
+
 		}
-		
+
 		return employeeIds;
 	}
-	
-	
+
 	@Override
 	public void deleteAttendanceDetails(List<Integer> employeeIds) throws Exception {
 
 		entityManager = JPAUtil.getEntityManager();
 		entityManager.getTransaction().begin();
 		logger.debug("Employee Id given:" + employeeIds);
-		
+		// TODO: please explain the below y remove and persist y nor save or
+		// update??
+		employeeIds.forEach(emp -> {
 
-		
-		employeeIds.forEach( emp -> {
-		
 			entityManager.find(AttendanceDetails.class, emp);
 			entityManager.remove(emp);
-				entityManager.persist(emp);
-				
-		
-		} );
-		
-		
-		
-		
+			entityManager.persist(emp);
+
+		});
 
 		entityManager.getTransaction().commit();
-			logger.info("Record Deleted Successfully");
-		
+		logger.info("Record Deleted Successfully");
+
 	}
 
 }

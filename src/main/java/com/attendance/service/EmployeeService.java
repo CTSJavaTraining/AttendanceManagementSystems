@@ -5,6 +5,7 @@ package com.attendance.service;
 
 import com.attendance.entity.Employee;
 import com.attendance.entity.EmployeeId;
+import com.attendance.pojo.EmployeeDetails;
 
 /**
  * @author 542320 Holds the method signature to be implemented by the
@@ -19,7 +20,7 @@ public interface EmployeeService {
 	 * @param empList
 	 */
 
-	public void insertEmployee(Employee employee) throws Exception;
+	public void insertEmployee(EmployeeDetails employee) throws Exception;
 
 	/**
 	 * 

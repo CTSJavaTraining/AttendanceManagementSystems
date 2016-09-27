@@ -105,6 +105,7 @@ public class LocationDetails implements java.io.Serializable {
 		this.wing = wing;
 	}
 
+
 	public List<Employee> getEmployees() {
 		return this.employees;
 	}

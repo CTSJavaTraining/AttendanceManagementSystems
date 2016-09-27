@@ -161,18 +161,18 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 		// TODO: Y reading from one list and moving data to other list?? need??
 		@SuppressWarnings("unchecked")
 		List<Integer> employeeIdList = (List<Integer>) query.getResultList();
-		List<Integer> employeeIds = new ArrayList<>();
+//		List<Integer> employeeIds = new ArrayList<>();
+//
+//		if (employeeSize > 0) {
+//			employeeIdList.forEach((emp) -> {
+//
+//				employeeIds.add(emp);
+//
+//			});
+//
+//		}
 
-		if (employeeSize > 0) {
-			employeeIdList.forEach((emp) -> {
-
-				employeeIds.add(emp);
-
-			});
-
-		}
-
-		return employeeIds;
+		return employeeIdList;
 	}
 
 	@Override
@@ -187,7 +187,7 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 
 			entityManager.find(AttendanceDetails.class, emp);
 			entityManager.remove(emp);
-			entityManager.persist(emp);
+			
 
 		});
 

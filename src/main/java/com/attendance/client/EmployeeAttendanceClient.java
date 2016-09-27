@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.attendance.entity.AttendanceDetails;
 import com.attendance.entity.Employee;
 import com.attendance.entity.EmployeeId;
+import com.attendance.pojo.EmployeeDetails;
 import com.attendance.serviceImpl.AttendanceServiceImpl;
 import com.attendance.serviceImpl.EmployeeServiceImpl;
 import com.attendance.timer.DeleteTimer;
@@ -54,8 +55,10 @@ public class EmployeeAttendanceClient {
 	 * @return
 	 */
 	@RequestMapping(value = "/insertemployee", method = RequestMethod.POST)
-	public ResponseEntity<Void> insertEmployees(@Valid @RequestBody Employee employee) {
+	public ResponseEntity<Void> insertEmployees(@Valid @RequestBody EmployeeDetails employee) {
 		try {
+			
+			
 			employeeServiceImpl.insertEmployee(employee);
 		} catch (Exception e) {
 

@@ -3,6 +3,7 @@ package com.attendance.DAOService;
 import java.util.Date;
 import java.util.List;
 import com.attendance.entity.AttendanceDetails;
+import com.attendance.entity.Employee;
 import com.attendance.exception.DAOException;
 
 /**
@@ -84,5 +85,21 @@ public interface AttendanceDAO {
 	 */
 
 	public void validateEmployeeMachineDetails(int empId, String machineId) throws DAOException;
+	
+	/**
+	 * Gets the employees inactive for past six months.
+	 
+	 * @throws Exception
+	 */
+	
+	public List<Integer> getInactiveEmployees() throws Exception;
+	
+	/**
+     * Deletes the attendance details after six months for inactive employees.
+	 * @param employeeIds
+	 * @throws Exception
+	 */
+	
+	public void deleteAttendanceDetails(List<Integer> employeeIds)throws Exception;
 
 }

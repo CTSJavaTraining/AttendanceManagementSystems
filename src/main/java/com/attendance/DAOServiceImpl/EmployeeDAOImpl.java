@@ -3,7 +3,6 @@
  */
 package com.attendance.DAOServiceImpl;
 
-
 import org.apache.log4j.Logger;
 import javax.persistence.EntityManager;
 import com.attendance.DAOService.EmployeeDAO;
@@ -12,8 +11,8 @@ import com.attendance.entity.EmployeeId;
 import com.attendance.util.JPAUtil;
 
 /**
- * @author 542320
- * EmployeeDAOImpl holds the implementation of methods used in EmployeeDAO interface.
+ * @author 542320 EmployeeDAOImpl holds the implementation of methods used in
+ *         EmployeeDAO interface.
  *
  */
 
@@ -36,14 +35,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
 		entityManager = JPAUtil.getEntityManager();
 		entityManager.getTransaction().begin();
-
-		
-
-			entityManager.persist(employee.getMachinedetails());
-			entityManager.persist(employee);
-
-		
-
+		entityManager.persist(employee);
 		entityManager.getTransaction().commit();
 		logger.info("Records inserted successfully");
 
@@ -58,20 +50,19 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 	@Override
 	public void deleteEmployee(EmployeeId empId) throws Exception {
 
-		
-			entityManager = JPAUtil.getEntityManager();
-			entityManager.getTransaction().begin();
-			logger.debug("Employee Id given:" + empId);
-			Employee emp = entityManager.find(Employee.class, empId);
-			if (emp != null) {
+		entityManager = JPAUtil.getEntityManager();
+		entityManager.getTransaction().begin();
+		logger.debug("Employee Id given:" + empId);
+		Employee emp = entityManager.find(Employee.class, empId);
+		if (emp != null) {
 
-				emp.setStatus("Inactive");
-				entityManager.persist(emp);
-				entityManager.getTransaction().commit();
-				logger.info("Record Deleted Successfully");
-			} else {
-				logger.info("Entered EmpId is invalid.No such data present in DB");
-			}
+			emp.setStatus("Inactive");
+			entityManager.persist(emp);
+			entityManager.getTransaction().commit();
+			logger.info("Record Deleted Successfully");
+		} else {
+			logger.info("Entered EmpId is invalid.No such data present in DB");
+		}
 	}
 
 }

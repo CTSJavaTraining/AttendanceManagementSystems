@@ -1,6 +1,7 @@
 package com.attendance.DAOServiceImpl;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -8,6 +9,8 @@ import javax.persistence.Query;
 import org.apache.log4j.Logger;
 import com.attendance.DAOService.AttendanceDAO;
 import com.attendance.entity.AttendanceDetails;
+import com.attendance.entity.Employee;
+import com.attendance.entity.EmployeeId;
 import com.attendance.exception.DAOException;
 import com.attendance.util.JPAUtil;
 
@@ -150,6 +153,62 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 			logger.info("Machine Details validated for Employee Successfully");
 		}
 
+	}
+
+	@Override
+	public List<Integer> getInactiveEmployees() throws Exception {
+		
+		List<Integer> employeeIds = new ArrayList<Integer>();
+		
+		entityManager = JPAUtil.getEntityManager();
+		entityManager.getTransaction().begin();
+		query = entityManager.createQuery("SELECT e.employee_id FROM Employee e WHERE  e.active_status= :status and DATE_ADD(e.relieving_date,INTERVAL 6 MONTH) = DATE(NOW())");
+		query.setParameter("status", "INACTIVE");
+		int employeeSize = query.getResultList().size();
+		List<Integer> employeeIdList = (List<Integer>)query.getResultList();
+		
+		if (employeeSize > 0) {
+			
+			employeeIdList.forEach( (emp) -> {
+				
+					
+				employeeIds.add(emp);
+					
+				
+			
+			} );
+			
+		}
+		
+		return employeeIds;
+	}
+	
+	
+	@Override
+	public void deleteAttendanceDetails(List<Integer> employeeIds) throws Exception {
+
+		entityManager = JPAUtil.getEntityManager();
+		entityManager.getTransaction().begin();
+		logger.debug("Employee Id given:" + employeeIds);
+		
+
+		
+		employeeIds.forEach( emp -> {
+		
+			entityManager.find(AttendanceDetails.class, emp);
+			entityManager.remove(emp);
+				entityManager.persist(emp);
+				
+		
+		} );
+		
+		
+		
+		
+
+		entityManager.getTransaction().commit();
+			logger.info("Record Deleted Successfully");
+		
 	}
 
 }

@@ -22,6 +22,8 @@ import com.attendance.entity.Employee;
 import com.attendance.entity.EmployeeId;
 import com.attendance.serviceImpl.AttendanceServiceImpl;
 import com.attendance.serviceImpl.EmployeeServiceImpl;
+import com.attendance.timer.DeleteTimer;
+
 import org.springframework.http.HttpStatus;
 
 /**
@@ -124,6 +126,24 @@ public class EmployeeAttendanceClient {
 			logger.error(e);
 		}
 		return new ResponseEntity<Void>(HttpStatus.CREATED);
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	
+	@RequestMapping(value = "/deletePastRecords", method = RequestMethod.DELETE)
+	public ResponseEntity<Void> deleteAttendanceDetails() {
+		context = new ClassPathXmlApplicationContext(propertyFile);
+		DeleteTimer deleteRecord = (DeleteTimer) context.getBean("deleteTimer");
+		try {
+			 deleteRecord.deleteAttendanceDetails();
+		} catch (Exception e) {
+
+			logger.error(e);
+		}
+		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
 
 }

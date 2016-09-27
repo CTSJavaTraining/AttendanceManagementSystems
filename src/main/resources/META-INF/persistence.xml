@@ -10,7 +10,7 @@
 	<class>com.attendance.entity.AttendanceDetails</class>
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
-			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/test" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://10.242.133.147:3306/test" />
 			<property name="javax.persistence.jdbc.user" value="root" />
 			<property name="javax.persistence.jdbc.password" value="root123" />
 

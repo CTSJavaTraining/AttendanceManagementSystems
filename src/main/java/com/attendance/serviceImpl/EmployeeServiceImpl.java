@@ -42,6 +42,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 		String accessCard = generateAccessCard();
 
 		employee.getId().setAccessCardno(accessCard);
+		
+		employee.setFirstname(employee.getFirstname().trim());
+		
+		employee.setLastname(employee.getLastname().trim());
+		
+		employee.setStatus(employee.getStatus().trim());
+		
+		employee.setUsertype(employee.getUsertype().trim());
 
 		emp.insertEmployee(employee);
 

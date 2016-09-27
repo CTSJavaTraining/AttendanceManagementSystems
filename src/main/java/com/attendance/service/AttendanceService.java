@@ -1,7 +1,10 @@
 package com.attendance.service;
 
 
+import java.util.List;
+
 import com.attendance.entity.AttendanceDetails;
+import com.attendance.entity.Employee;
 
 /**
  * 
@@ -36,5 +39,7 @@ public interface AttendanceService {
 	 * @throws Exception
 	 */
 	public void insertSwipeOutHours(AttendanceDetails swipeOut) throws Exception;
+	
+
 
 }

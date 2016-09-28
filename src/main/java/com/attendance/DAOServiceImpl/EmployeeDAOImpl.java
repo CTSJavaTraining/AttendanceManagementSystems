@@ -4,14 +4,14 @@
 package com.attendance.DAOServiceImpl;
 
 import javax.persistence.EntityManager;
-
+import javax.persistence.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
 import com.attendance.DAOService.EmployeeDAO;
 import com.attendance.entity.Employee;
 import com.attendance.entity.EmployeeId;
+import com.attendance.exception.DAOException;
 import com.attendance.util.JPAUtil;
 
 /**
@@ -52,11 +52,20 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 	 */
 
 	@Override
-	public void deleteEmployee(EmployeeId empId) throws Exception {
+	public void deleteEmployee(EmployeeId empId) throws DAOException {
 
 		entityManager = JPAUtil.getEntityManager();
 		entityManager.getTransaction().begin();
-		logger.debug("Employee Id given:{}", empId);
+		logger.debug("Employee Id given:{}", empId.getEmployeeid());
+		Query query = entityManager.createQuery("SELECT e FROM Employee e WHERE e.id.employeeid= :id and e.status= :status");
+		query.setParameter("id", empId.getEmployeeid());
+	    query.setParameter("status", "Active");
+	    if(query.getSingleResult()!= null){
+	    	
+	    	Employee employee = (Employee)query.getSingleResult();
+	    	empId.setAccessCardno(employee.getId().getAccessCardno());
+	    	
+	    }
 		Employee emp = entityManager.find(Employee.class, empId);
 		if (emp != null) {
 
@@ -65,7 +74,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 			entityManager.getTransaction().commit();
 			logger.info("Record Deleted Successfully");
 		} else {
-			logger.info("Entered EmpId is invalid.No such data present in DB");
+			throw new DAOException("Entered EmpId is invalid.No such data present in DB");
 		}
 	}
 

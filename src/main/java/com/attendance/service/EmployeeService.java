@@ -3,8 +3,8 @@
  */
 package com.attendance.service;
 
-import com.attendance.entity.Employee;
-import com.attendance.entity.EmployeeId;
+
+import com.attendance.exception.DAOException;
 import com.attendance.pojo.EmployeeDetails;
 
 /**
@@ -17,7 +17,7 @@ public interface EmployeeService {
 	 * 
 	 * Sets the employee list as input and persists the records.
 	 * 
-	 * @param empList
+	 * @param employee
 	 */
 
 	public void insertEmployee(EmployeeDetails employee) throws Exception;
@@ -29,6 +29,6 @@ public interface EmployeeService {
 	 * @param empId
 	 */
 
-	public void deleteEmployee(EmployeeId empId) throws Exception;
+	public void deleteEmployee(int empId) throws DAOException;
 
 }

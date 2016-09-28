@@ -7,11 +7,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.attendance.DAOServiceImpl.EmployeeDAOImpl;
 import com.attendance.entity.Employee;
 import com.attendance.entity.EmployeeId;
 import com.attendance.entity.LocationDetails;
+import com.attendance.exception.DAOException;
 import com.attendance.pojo.EmployeeDetails;
 import com.attendance.service.EmployeeService;
 import com.attendance.util.Utility;
@@ -76,9 +76,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 	 */
 
 	@Override
-	public void deleteEmployee(EmployeeId empId) throws Exception {
-
-		employeeDAOImpl.deleteEmployee(empId);
+	public void deleteEmployee(int empId) throws DAOException {
+		
+		logger.info("Fetching & Deleting User with id:{} ",empId);
+		
+		EmployeeId employeeId = new EmployeeId();
+		employeeId.setEmployeeid(empId);
+		employeeDAOImpl.deleteEmployee(employeeId);
 
 	}
 

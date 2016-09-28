@@ -4,7 +4,6 @@
 package com.attendance.client;
 
 import javax.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.attendance.entity.AttendanceDetails;
 import com.attendance.entity.Employee;
-import com.attendance.entity.EmployeeId;
+import com.attendance.exception.DAOException;
 import com.attendance.pojo.EmployeeDetails;
 import com.attendance.serviceImpl.AttendanceServiceImpl;
 import com.attendance.serviceImpl.EmployeeServiceImpl;
@@ -76,10 +74,10 @@ public class EmployeeAttendanceClient {
 	 */
 
 	@RequestMapping(value = "/deleteemployee/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<Employee> deleteEmployees(@PathVariable("id") EmployeeId id) {
+	public ResponseEntity<Employee> deleteEmployees(@PathVariable("id") int id) {
 		try {
 			employeeServiceImpl.deleteEmployee(id);
-		} catch (Exception e) {
+		} catch (DAOException e) {
 
 			logger.error("", e);
 		}

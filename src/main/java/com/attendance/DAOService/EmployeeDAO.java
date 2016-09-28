@@ -5,6 +5,7 @@ package com.attendance.DAOService;
 
 import com.attendance.entity.Employee;
 import com.attendance.entity.EmployeeId;
+import com.attendance.exception.DAOException;
 
 /**
  * @author 542320 Holds the method signature to be implemented by the
@@ -28,6 +29,6 @@ public interface EmployeeDAO {
 	 * @param empId
 	 */
 
-	public void deleteEmployee(EmployeeId empId) throws Exception;
+	public void deleteEmployee(EmployeeId empId) throws DAOException;
 
 }

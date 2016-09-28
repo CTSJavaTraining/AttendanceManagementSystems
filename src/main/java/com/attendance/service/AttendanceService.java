@@ -1,6 +1,7 @@
 package com.attendance.service;
 
 import com.attendance.entity.AttendanceDetails;
+import com.attendance.pojo.Attendance;
 
 /**
  * 
@@ -25,7 +26,7 @@ public interface AttendanceService {
 	 * @throws Exception
 	 */
 
-	public void insertSwipeInHours(AttendanceDetails swipeIn) throws Exception;
+	public void insertSwipeInHours(Attendance swipeIn) throws Exception;
 
 	/**
 	 * Sets the attendance details with swipe out time of the employee and

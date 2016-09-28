@@ -15,7 +15,13 @@ import org.springframework.stereotype.Component;
 
 import com.attendance.DAOServiceImpl.AttendanceDAOImpl;
 import com.attendance.entity.AttendanceDetails;
+import com.attendance.entity.Employee;
+import com.attendance.entity.EmployeeId;
+import com.attendance.entity.LocationDetails;
+import com.attendance.entity.MachineDetails;
+import com.attendance.pojo.Attendance;
 import com.attendance.service.AttendanceService;
+import com.attendance.util.Utility;
 
 /**
  * @author 542320 AttendanceServiceImpl holds the implementation of methods used
@@ -89,9 +95,18 @@ public class AttendanceServiceImpl implements AttendanceService {
 	 */
 
 	@Override
-	public void insertSwipeInHours(AttendanceDetails attendance) throws Exception {
-
-		attendanceDAOImpl.insertSwipeInHours(attendance);
+	public void insertSwipeInHours(Attendance attendance) throws Exception {
+		AttendanceDetails attendanceDetails = new AttendanceDetails();
+		Employee employee = new Employee();
+		EmployeeId empId = new EmployeeId();
+		LocationDetails locationDetails = new LocationDetails();
+		empId.setEmployeeid(attendance.getEmployeeId());
+		empId.setAccessCardno(attendance.getAccessCardNo());
+		employee.setId(empId);
+		attendanceDetails.setEmployee(employee);
+	    locationDetails.setMachineName(attendance.getMachineId());
+		attendanceDetails.setSwipeIn(Utility.getCurrentDate());
+		attendanceDAOImpl.insertSwipeInHours(attendanceDetails);
 
 	}
 

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.attendance.entity.AttendanceDetails;
 import com.attendance.entity.Employee;
 import com.attendance.exception.DAOException;
+import com.attendance.pojo.Attendance;
 import com.attendance.pojo.EmployeeDetails;
 import com.attendance.serviceImpl.AttendanceServiceImpl;
 import com.attendance.serviceImpl.EmployeeServiceImpl;
@@ -55,8 +56,7 @@ public class EmployeeAttendanceClient {
 	@RequestMapping(value = "/insertemployee", method = RequestMethod.POST)
 	public ResponseEntity<Void> insertEmployees(@Valid @RequestBody EmployeeDetails employee) {
 		try {
-			
-			
+
 			employeeServiceImpl.insertEmployee(employee);
 		} catch (Exception e) {
 
@@ -93,7 +93,7 @@ public class EmployeeAttendanceClient {
 	 */
 
 	@RequestMapping(value = "/insertswipein", method = RequestMethod.POST)
-	public ResponseEntity<Void> insertSwipeInHours(@RequestBody AttendanceDetails swipeIn) {
+	public ResponseEntity<Void> insertSwipeInHours(@RequestBody Attendance swipeIn) {
 
 		try {
 			attendanceServiceImpl.insertSwipeInHours(swipeIn);

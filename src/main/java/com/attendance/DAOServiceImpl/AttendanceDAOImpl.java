@@ -1,6 +1,6 @@
 package com.attendance.DAOServiceImpl;
 
-import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.List;
 
@@ -13,8 +13,11 @@ import org.springframework.stereotype.Component;
 
 import com.attendance.DAOService.AttendanceDAO;
 import com.attendance.entity.AttendanceDetails;
+import com.attendance.entity.Employee;
 import com.attendance.entity.EmployeeId;
+import com.attendance.entity.MachineDetails;
 import com.attendance.exception.DAOException;
+import com.attendance.pojo.Attendance;
 import com.attendance.util.JPAUtil;
 import com.attendance.util.Utility;
 
@@ -58,10 +61,10 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 	public void insertSwipeInHours(AttendanceDetails attendance) throws Exception {
 		entityManager = JPAUtil.getEntityManager();
 		entityManager.getTransaction().begin();
-		EmployeeId id = attendance.getEmployee().getId();
-		getEmployee(id.getEmployeeid(), id.getAccessCardno());
-		validateEmployeeMachineDetails(id.getEmployeeid(), attendance.getMachinedetails().getMachineId());
-		attendance.setSwipeIn(Utility.getCurrentDate());
+		
+		getEmployee(attendance.getEmployee().getId().getEmployeeid(),attendance.getEmployee().getId().getAccessCardno());
+		validateEmployeeMachineDetails(attendance.getEmployee().getId().getEmployeeid(),attendance.getEmployee().getId().getAccessCardno(), attendance.getLocationdetails().getMachineName());
+	
 		entityManager.persist(attendance);
 		entityManager.getTransaction().commit();
 		logger.info("Records inserted successfully");
@@ -77,22 +80,25 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 
 	@Override
 	public void getEmployee(int empId, String cardno) throws DAOException {
-		logger.debug("The given Employee ID is: {}", empId);
+		logger.debug("The given Employee ID is: {},The given Machine ID is:{}", empId, cardno);
 
 		entityManager = JPAUtil.getEntityManager();
 		entityManager.getTransaction().begin();
-		// TODO: Wrong query employee_id is not available in POJO class
+	
 		Query query = entityManager.createQuery(
-				"SELECT e FROM Employee e WHERE e.employee_id= :id and e.access_cardno= :cardNo and e.active_status= :status");
+				"SELECT e FROM Employee e WHERE e.id.employeeid= :id and e.id.accessCardno= :cardNo and e.status= :status");
 		query.setParameter("id", empId);
 		query.setParameter("cardNo", cardno);
-		query.setParameter("status", "Y");
-		int employeeSize = query.getResultList().size();
-		if (employeeSize == 0) {
+		query.setParameter("status", "Active");
+	
+		if (query.getSingleResult()!= null) {
+			
+			logger.info("Employee ID successfully validated");
+			
+		} else {
+			
 			throw new DAOException(
 					"The given Employee ID and access card no combination doesn't match with any data or doesn't exists in DB");
-		} else {
-			logger.info("Employee ID successfully validated");
 		}
 
 	}
@@ -107,7 +113,7 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 		EmployeeId id = attendance.getEmployee().getId();
 		query.setParameter("id", id.getEmployeeid());
 		query.setParameter("cardNo", id.getAccessCardno());
-		query.setParameter("machineId", attendance.getMachinedetails().getMachineId());
+		query.setParameter("machineId", attendance.getLocationdetails().getLocationName());
 		query.setParameter("swipeIn", attendance.getSwipeIn());
 		query.setParameter("status", "Y");
 
@@ -129,22 +135,24 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 	}
 
 	@Override
-	public void validateEmployeeMachineDetails(int empId, String machineId) throws DAOException {
+	public void validateEmployeeMachineDetails(int empId,String accessCardNo, String machineId) throws DAOException {
 
 		logger.debug("The given Employee ID is: {},The given Machine ID is:{}", empId, machineId);
 
 		entityManager = JPAUtil.getEntityManager();
 		entityManager.getTransaction().begin();
 		Query query = entityManager.createQuery(
-				"SELECT machine FROM machinedetails machine WHERE machine.employee_id= :empId and machine.machine_Id= :machineId and machine.activate_status= :activate_status");
+				"SELECT machine FROM MachineDetails machine WHERE machine.employee.id.employeeid= :empId and machine.employee.id.accessCardno= :accessCardNo  and machine.locationdetails.machineName= :machineId and machine.activationStatus= :activate_status");
 		query.setParameter("empId", empId);
+		query.setParameter("accessCardNo", accessCardNo);
 		query.setParameter("machineId", machineId);
-		query.setParameter("activate_status", "Y");
-		int validMachine = query.getResultList().size();
-		if (validMachine == 0) {
-			throw new DAOException("The given machine ID " + machineId + "is not mapped to employee" + empId);
-		} else {
+		query.setParameter("activate_status", "Yes");
+		
+		if (query.getSingleResult()!=null) {
 			logger.info("Machine Details validated for Employee Successfully");
+		} else {
+			
+			throw new DAOException("The given machine ID " + machineId + "is not mapped to employee" + empId);
 		}
 
 	}
@@ -158,19 +166,10 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 				"SELECT e.employee_id FROM Employee e WHERE  e.active_status= :status and DATE_ADD(e.relieving_date,INTERVAL 6 MONTH) = DATE(NOW())");
 		query.setParameter("status", "INACTIVE");
 		int employeeSize = query.getResultList().size();
-		// TODO: Y reading from one list and moving data to other list?? need??
+
 		@SuppressWarnings("unchecked")
 		List<Integer> employeeIdList = (List<Integer>) query.getResultList();
-//		List<Integer> employeeIds = new ArrayList<>();
-//
-//		if (employeeSize > 0) {
-//			employeeIdList.forEach((emp) -> {
-//
-//				employeeIds.add(emp);
-//
-//			});
-//
-//		}
+
 
 		return employeeIdList;
 	}
@@ -181,8 +180,7 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 		entityManager = JPAUtil.getEntityManager();
 		entityManager.getTransaction().begin();
 		logger.debug("Employee Id given:" + employeeIds);
-		// TODO: please explain the below y remove and persist y nor save or
-		// update??
+
 		employeeIds.forEach(emp -> {
 
 			entityManager.find(AttendanceDetails.class, emp);

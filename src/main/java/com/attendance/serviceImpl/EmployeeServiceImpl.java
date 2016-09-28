@@ -54,7 +54,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	   
 	   locationdetails.setLocationId(employeedetails.getLocationId());
 	   
-	   employee.setLocationDetails(locationdetails);
+	   employee.setLocationdetails(locationdetails);
 
 		employee.setFirstname(employeedetails.getFirstName().trim());
 
@@ -63,6 +63,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee.setStatus(employeedetails.getStatus().trim());
 
 		employee.setUsertype(employeedetails.getUserType().trim());
+		
+		employee.setJoiningDate(Utility.getCurrentDate());
 
 		employeeDAOImpl.insertEmployee(employee);
 

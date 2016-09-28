@@ -1,4 +1,5 @@
 package com.attendance.entity;
+// Generated Sep 28, 2016 7:33:38 PM by Hibernate Tools 5.2.0.Beta1
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -9,24 +10,12 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class EmployeeId implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	private int employeeid;
 	private String accessCardno;
 
 	public EmployeeId() {
-		/**
-		 * 
-		 */
 	}
 
-	/**
-	 * 
-	 * @param employeeid
-	 * @param accessCardno
-	 */
 	public EmployeeId(int employeeid, String accessCardno) {
 		this.employeeid = employeeid;
 		this.accessCardno = accessCardno;
@@ -41,7 +30,7 @@ public class EmployeeId implements java.io.Serializable {
 		this.employeeid = employeeid;
 	}
 
-	@Column(name = "access_cardno", nullable = false, length = 20)
+	@Column(name = "access_cardno", nullable = false, length = 60)
 	public String getAccessCardno() {
 		return this.accessCardno;
 	}
@@ -50,14 +39,10 @@ public class EmployeeId implements java.io.Serializable {
 		this.accessCardno = accessCardno;
 	}
 
-	/**
-	 * 
-	 */
-	@Override
 	public boolean equals(Object other) {
-		if (this == other)
+		if ((this == other))
 			return true;
-		if (other == null)
+		if ((other == null))
 			return false;
 		if (!(other instanceof EmployeeId))
 			return false;
@@ -69,10 +54,6 @@ public class EmployeeId implements java.io.Serializable {
 								&& this.getAccessCardno().equals(castOther.getAccessCardno())));
 	}
 
-	/**
-	 * 
-	 */
-	@Override
 	public int hashCode() {
 		int result = 17;
 

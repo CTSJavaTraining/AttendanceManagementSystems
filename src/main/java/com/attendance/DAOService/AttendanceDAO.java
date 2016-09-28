@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.attendance.entity.AttendanceDetails;
 import com.attendance.exception.DAOException;
+import com.attendance.pojo.Attendance;
 
 /**
  * 
@@ -84,7 +85,7 @@ public interface AttendanceDAO {
 	 * @throws Exception
 	 */
 
-	public void validateEmployeeMachineDetails(int empId, String machineId) throws DAOException;
+	public void validateEmployeeMachineDetails(int empId,String accessCardNo,String machineId) throws DAOException;
 
 	/**
 	 * Gets the employees inactive for past six months.

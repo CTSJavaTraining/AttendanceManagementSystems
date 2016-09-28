@@ -1,11 +1,30 @@
 package com.attendance.pojo;
 
+import java.util.Date;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotBlank;
 
 public class EmployeeDetails {
+	
+	private int employeeId;
+    private String accessCardNo;
+    private int locationId;
+	@NotBlank(message = "Firstname must not be blank!")
+	@Pattern(regexp = "[a-zA-Z]*", message = "Firstname should not contain special characters and numbers.Please enter a valid firstname.")
+	private String firstName;
+	@NotBlank(message = "Lastname must not be blank!")
+	@Pattern(regexp = "[a-zA-Z]*", message = "Lastname should not contain special characters and numbers.Please enter a valid lastname.")
+	private String lastName;
+	@NotBlank(message = "Usertype must not be blank!")
+	@Pattern(regexp = "[a-zA-Z]*", message = "Please enter the value in the format - 'Permanent' or 'Contract'.")
+	private String userType;
+	@NotBlank(message = "Status must not be blank!")
+	@Pattern(regexp = "[a-zA-Z]*", message = "Please enter the value in the format - 'ACTIVE' or 'INACTIVE'.")
+	private String status;
+	private Date joiningDate;
 	
 	public int getEmployeeId() {
 		return employeeId;
@@ -49,25 +68,22 @@ public class EmployeeDetails {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+	
+	/**
+	 * @return the joiningDate
+	 */
+	public Date getJoiningDate() {
+		return joiningDate;
+	}
+	/**
+	 * @param joiningDate the joiningDate to set
+	 */
+	public void setJoiningDate(Date joiningDate) {
+		this.joiningDate = joiningDate;
+	}
 
 
-	private int employeeId;
-
-	private String accessCardNo;
 
 	
-	private int locationId;
-	@NotBlank(message = "Firstname must not be blank!")
-	@Pattern(regexp = "[a-zA-Z]*", message = "Firstname should not contain special characters and numbers.Please enter a valid firstname.")
-	private String firstName;
-	@NotBlank(message = "Lastname must not be blank!")
-	@Pattern(regexp = "[a-zA-Z]*", message = "Lastname should not contain special characters and numbers.Please enter a valid lastname.")
-	private String lastName;
-	@NotBlank(message = "Usertype must not be blank!")
-	@Pattern(regexp = "[a-zA-Z]*", message = "Please enter the value in the format - 'Permanent' or 'Contract'.")
-	private String userType;
-	@NotBlank(message = "Status must not be blank!")
-	@Pattern(regexp = "[a-zA-Z]*", message = "Please enter the value in the format - 'ACTIVE' or 'INACTIVE'.")
-	private String status;
 
 }

@@ -6,6 +6,8 @@ package com.attendance.service;
 
 import com.attendance.exception.DAOException;
 import com.attendance.pojo.EmployeeDetails;
+import com.attendance.pojo.EmployeeMachineDetails;
+import com.attendance.pojo.Location;
 
 /**
  * @author 542320 Holds the method signature to be implemented by the
@@ -30,5 +32,9 @@ public interface EmployeeService {
 	 */
 
 	public void deleteEmployee(int empId) throws DAOException;
+	
+	public void insertLocationDetails(Location locationDetails)throws Exception;
+	
+	public void mapEmployeeToMachine(EmployeeMachineDetails machineDetails)throws Exception;
 
 }

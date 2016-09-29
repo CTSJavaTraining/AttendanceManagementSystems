@@ -63,8 +63,8 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 		entityManager.getTransaction().begin();
 		
 		getEmployee(attendance.getEmployee().getId().getEmployeeid(),attendance.getEmployee().getId().getAccessCardno());
-		validateEmployeeMachineDetails(attendance.getEmployee().getId().getEmployeeid(),attendance.getEmployee().getId().getAccessCardno(), attendance.getLocationdetails().getMachineName());
-	
+		validateEmployeeMachineDetails(attendance.getEmployee().getId().getEmployeeid(),attendance.getEmployee().getId().getAccessCardno(), attendance.getMachineName());
+	    
 		entityManager.persist(attendance);
 		entityManager.getTransaction().commit();
 		logger.info("Records inserted successfully");
@@ -81,7 +81,9 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 	@Override
 	public void getEmployee(int empId, String cardno) throws DAOException {
 		logger.debug("The given Employee ID is: {},The given Machine ID is:{}", empId, cardno);
-
+		
+		logger.info("The given Employee2 ID is: {},The given Machine ID is:{}"+" "+empId+" "+cardno);
+		
 		entityManager = JPAUtil.getEntityManager();
 		entityManager.getTransaction().begin();
 	
@@ -113,7 +115,7 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 		EmployeeId id = attendance.getEmployee().getId();
 		query.setParameter("id", id.getEmployeeid());
 		query.setParameter("cardNo", id.getAccessCardno());
-		query.setParameter("machineId", attendance.getLocationdetails().getLocationName());
+		query.setParameter("machineId", attendance.getMachineName());
 		query.setParameter("swipeIn", attendance.getSwipeIn());
 		query.setParameter("status", "Y");
 
@@ -138,14 +140,14 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 	public void validateEmployeeMachineDetails(int empId,String accessCardNo, String machineId) throws DAOException {
 
 		logger.debug("The given Employee ID is: {},The given Machine ID is:{}", empId, machineId);
-
+		logger.info("The given Machine ID is:"+ machineId+" "+empId+" "+accessCardNo);
 		entityManager = JPAUtil.getEntityManager();
 		entityManager.getTransaction().begin();
 		Query query = entityManager.createQuery(
-				"SELECT machine FROM MachineDetails machine WHERE machine.employee.id.employeeid= :empId and machine.employee.id.accessCardno= :accessCardNo  and machine.locationdetails.machineName= :machineId and machine.activationStatus= :activate_status");
+				"SELECT machine FROM MachineDetails machine WHERE machine.employee.id.employeeid= :empId and machine.employee.id.accessCardno= :accessCardNo and machine.machineName= :machineName and machine.activationStatus=:activate_status");
 		query.setParameter("empId", empId);
 		query.setParameter("accessCardNo", accessCardNo);
-		query.setParameter("machineId", machineId);
+		query.setParameter("machineName", machineId);
 		query.setParameter("activate_status", "Yes");
 		
 		if (query.getSingleResult()!=null) {
@@ -192,6 +194,12 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 		entityManager.getTransaction().commit();
 		logger.info("Record Deleted Successfully");
 
+	}
+	
+	public void getCurrentDateAttendance(){
+		entityManager = JPAUtil.getEntityManager();
+		entityManager.getTransaction().begin();
+		
 	}
 
 }

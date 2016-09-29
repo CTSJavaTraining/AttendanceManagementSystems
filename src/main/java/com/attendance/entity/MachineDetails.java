@@ -1,5 +1,5 @@
 package com.attendance.entity;
-// Generated Sep 28, 2016 7:33:38 PM by Hibernate Tools 5.2.0.Beta1
+// Generated Sep 29, 2016 12:40:42 PM by Hibernate Tools 5.2.0.Beta1
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,14 +22,17 @@ public class MachineDetails implements java.io.Serializable {
 	private Integer machineId;
 	private Employee employee;
 	private LocationDetails locationdetails;
+	private String machineName;
 	private String activationStatus;
 
 	public MachineDetails() {
 	}
 
-	public MachineDetails(Employee employee, LocationDetails locationdetails, String activationStatus) {
+	public MachineDetails(Employee employee, LocationDetails locationdetails, String machineName,
+			String activationStatus) {
 		this.employee = employee;
 		this.locationdetails = locationdetails;
+		this.machineName = machineName;
 		this.activationStatus = activationStatus;
 	}
 
@@ -57,13 +60,22 @@ public class MachineDetails implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "machineName", nullable = false)
+	@JoinColumn(name = "locationId", nullable = false)
 	public LocationDetails getLocationdetails() {
 		return this.locationdetails;
 	}
 
 	public void setLocationdetails(LocationDetails locationdetails) {
 		this.locationdetails = locationdetails;
+	}
+
+	@Column(name = "machineName", nullable = false, length = 60)
+	public String getMachineName() {
+		return this.machineName;
+	}
+
+	public void setMachineName(String machineName) {
+		this.machineName = machineName;
 	}
 
 	@Column(name = "activation_status", nullable = false, length = 20)

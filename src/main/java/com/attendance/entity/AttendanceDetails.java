@@ -1,5 +1,5 @@
 package com.attendance.entity;
-// Generated Sep 28, 2016 7:33:38 PM by Hibernate Tools 5.2.0.Beta1
+// Generated Sep 29, 2016 12:40:42 PM by Hibernate Tools 5.2.0.Beta1
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -24,26 +24,25 @@ public class AttendanceDetails implements java.io.Serializable {
 
 	private Integer attendanceId;
 	private Employee employee;
-	private LocationDetails locationdetails;
 	private Date swipeIn;
 	private Date swipeOut;
 	private Integer totalHours;
+	private String machineName;
 
 	public AttendanceDetails() {
 	}
 
-	public AttendanceDetails(Employee employee, LocationDetails locationdetails) {
+	public AttendanceDetails(Employee employee, String machineName) {
 		this.employee = employee;
-		this.locationdetails = locationdetails;
+		this.machineName = machineName;
 	}
 
-	public AttendanceDetails(Employee employee, LocationDetails locationdetails, Date swipeIn, Date swipeOut,
-			Integer totalHours) {
+	public AttendanceDetails(Employee employee, Date swipeIn, Date swipeOut, Integer totalHours, String machineName) {
 		this.employee = employee;
-		this.locationdetails = locationdetails;
 		this.swipeIn = swipeIn;
 		this.swipeOut = swipeOut;
 		this.totalHours = totalHours;
+		this.machineName = machineName;
 	}
 
 	@Id
@@ -67,16 +66,6 @@ public class AttendanceDetails implements java.io.Serializable {
 
 	public void setEmployee(Employee employee) {
 		this.employee = employee;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "machineName", nullable = false)
-	public LocationDetails getLocationdetails() {
-		return this.locationdetails;
-	}
-
-	public void setLocationdetails(LocationDetails locationdetails) {
-		this.locationdetails = locationdetails;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -106,6 +95,15 @@ public class AttendanceDetails implements java.io.Serializable {
 
 	public void setTotalHours(Integer totalHours) {
 		this.totalHours = totalHours;
+	}
+
+	@Column(name = "machineName", nullable = false, length = 60)
+	public String getMachineName() {
+		return this.machineName;
+	}
+
+	public void setMachineName(String machineName) {
+		this.machineName = machineName;
 	}
 
 }

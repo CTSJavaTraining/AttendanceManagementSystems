@@ -21,6 +21,8 @@ import com.attendance.entity.Employee;
 import com.attendance.exception.DAOException;
 import com.attendance.pojo.Attendance;
 import com.attendance.pojo.EmployeeDetails;
+import com.attendance.pojo.EmployeeMachineDetails;
+import com.attendance.pojo.Location;
 import com.attendance.serviceImpl.AttendanceServiceImpl;
 import com.attendance.serviceImpl.EmployeeServiceImpl;
 import com.attendance.timer.DeleteTimer;
@@ -137,6 +139,29 @@ public class EmployeeAttendanceClient {
 			logger.error("", e);
 		}
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+	}
+	
+	@RequestMapping(value = "/insertlocationdetails", method = RequestMethod.POST)
+	public ResponseEntity<Void> insertLocationDetails(@RequestBody Location locationDetails) {
+		try {
+			employeeServiceImpl.insertLocationDetails(locationDetails);
+		} catch (Exception e) {
+
+			logger.error("", e);
+		}
+		return new ResponseEntity<Void>(HttpStatus.CREATED);
+	}
+	
+	
+	@RequestMapping(value = "/insertmachinedetails", method = RequestMethod.POST)
+	public ResponseEntity<Void> insertMachineDetails(@RequestBody EmployeeMachineDetails machineDetails) {
+		try {
+			employeeServiceImpl.mapEmployeeToMachine(machineDetails);
+		} catch (Exception e) {
+
+			logger.error("", e);
+		}
+		return new ResponseEntity<Void>(HttpStatus.CREATED);
 	}
 
 }

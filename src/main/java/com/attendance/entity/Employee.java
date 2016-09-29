@@ -1,5 +1,5 @@
 package com.attendance.entity;
-// Generated Sep 28, 2016 7:33:38 PM by Hibernate Tools 5.2.0.Beta1
+// Generated Sep 29, 2016 12:40:42 PM by Hibernate Tools 5.2.0.Beta1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -50,7 +50,7 @@ public class Employee implements java.io.Serializable {
 	}
 
 	public Employee(EmployeeId id, LocationDetails locationdetails, String firstname, String lastname, String status,
-			String usertype, Date joiningDate, Date relievingDate, Set<MachineDetails> machinedetailses, Set<AttendanceDetails> attendancedetailses) {
+			String usertype, Date joiningDate, Date relievingDate, Set<MachineDetails> machinedetailses, Set attendancedetailses) {
 		this.id = id;
 		this.locationdetails = locationdetails;
 		this.firstname = firstname;

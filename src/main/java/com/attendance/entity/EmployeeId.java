@@ -1,5 +1,5 @@
 package com.attendance.entity;
-// Generated Sep 28, 2016 7:33:38 PM by Hibernate Tools 5.2.0.Beta1
+// Generated Sep 29, 2016 12:40:42 PM by Hibernate Tools 5.2.0.Beta1
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;

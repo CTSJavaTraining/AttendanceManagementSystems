@@ -17,7 +17,6 @@ import com.attendance.DAOServiceImpl.AttendanceDAOImpl;
 import com.attendance.entity.AttendanceDetails;
 import com.attendance.entity.Employee;
 import com.attendance.entity.EmployeeId;
-import com.attendance.entity.LocationDetails;
 import com.attendance.entity.MachineDetails;
 import com.attendance.pojo.Attendance;
 import com.attendance.service.AttendanceService;
@@ -99,12 +98,12 @@ public class AttendanceServiceImpl implements AttendanceService {
 		AttendanceDetails attendanceDetails = new AttendanceDetails();
 		Employee employee = new Employee();
 		EmployeeId empId = new EmployeeId();
-		LocationDetails locationDetails = new LocationDetails();
+		
 		empId.setEmployeeid(attendance.getEmployeeId());
 		empId.setAccessCardno(attendance.getAccessCardNo());
 		employee.setId(empId);
 		attendanceDetails.setEmployee(employee);
-	    locationDetails.setMachineName(attendance.getMachineId());
+	
 		attendanceDetails.setSwipeIn(Utility.getCurrentDate());
 		attendanceDAOImpl.insertSwipeInHours(attendanceDetails);
 

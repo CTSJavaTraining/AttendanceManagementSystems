@@ -103,8 +103,10 @@ public class AttendanceServiceImpl implements AttendanceService {
 		empId.setAccessCardno(attendance.getAccessCardNo());
 		employee.setId(empId);
 		attendanceDetails.setEmployee(employee);
+		attendanceDetails.setMachineName(attendance.getMachineId());
 	
 		attendanceDetails.setSwipeIn(Utility.getCurrentDate());
+		
 		attendanceDAOImpl.insertSwipeInHours(attendanceDetails);
 
 	}

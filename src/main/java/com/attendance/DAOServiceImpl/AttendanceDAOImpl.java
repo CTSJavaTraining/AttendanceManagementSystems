@@ -1,10 +1,12 @@
 package com.attendance.DAOServiceImpl;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
 import org.slf4j.Logger;
@@ -17,9 +19,13 @@ import com.attendance.entity.Employee;
 import com.attendance.entity.EmployeeId;
 import com.attendance.entity.MachineDetails;
 import com.attendance.exception.DAOException;
+import com.attendance.generatereport.GenerateReport;
 import com.attendance.pojo.Attendance;
 import com.attendance.util.JPAUtil;
 import com.attendance.util.Utility;
+
+import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 /**
  * 
@@ -64,7 +70,8 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 		
 		getEmployee(attendance.getEmployee().getId().getEmployeeid(),attendance.getEmployee().getId().getAccessCardno());
 		validateEmployeeMachineDetails(attendance.getEmployee().getId().getEmployeeid(),attendance.getEmployee().getId().getAccessCardno(), attendance.getMachineName());
-	    
+		  getCurrentDateAttendance(attendance.getEmployee().getId().getEmployeeid());
+		
 		entityManager.persist(attendance);
 		entityManager.getTransaction().commit();
 		logger.info("Records inserted successfully");
@@ -196,9 +203,39 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 
 	}
 	
-	public void getCurrentDateAttendance(){
+	public void getCurrentDateAttendance(int empId){
 		entityManager = JPAUtil.getEntityManager();
-		entityManager.getTransaction().begin();
+     	entityManager.getTransaction().begin();
+     
+		Query query = entityManager.createQuery(
+				"SELECT MAX(attendance.swipeIn) FROM AttendanceDetails attendance WHERE  attendance.employee.id.employeeid= :empId and attendance.swipeOut is not null");
+		query.setParameter("empId", empId);
+		
+		logger.info("The size is:{}"+query.getResultList().size());
+		
+		if(query.getResultList().size()==1){
+			logger.info("Entering into reports");
+			Query queryReport = entityManager.createQuery("select attendance.employee.id.employeeid,MAX(attendance.swipeIn),attendance.swipeOut from AttendanceDetails attendance");
+			List<Object[]> attdet =queryReport.getResultList();
+			List<Attendance> attendanceList = new ArrayList<Attendance>();
+			Attendance attendance = new Attendance();
+			
+			for ( Object[] elements: attdet) {
+			   
+				attendance.setEmployeeId((int) (elements[0]));
+				attendance.setSwipeIn((Date) (elements[1]));
+				attendance.setSwipeOut((Date) (elements[2]));
+			}
+			
+			attendanceList.add(attendance);
+			
+			JRDataSource dataSource = new JRBeanCollectionDataSource(attendanceList);
+			GenerateReport report = new GenerateReport();
+			report.showReport(dataSource);
+		}else{
+			
+		}
+		
 		
 	}
 

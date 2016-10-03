@@ -17,9 +17,9 @@ public class GenerateReport {
 	JasperReportBuilder report = DynamicReports.report();//a new report
 	report.columns(
 	   
-	  
-	      Columns.column("SwipeIn", "swipeIn", DataTypes.dateType()),
-	 Columns.column("SwipeOut", "swipeOut", DataTypes.dateType())
+			 Columns.column("EmployeeId", "employeeId", DataTypes.integerType()),
+	      Columns.column("SwipeIn", "swipeIn", DataTypes.dateYearToSecondType()),
+	 Columns.column("SwipeOut", "swipeOut", DataTypes.dateYearToMinuteType())
 	
 	 
 	 )
@@ -34,6 +34,7 @@ report.show();
 
         //export the report to a pdf file
 report.toPdf(new FileOutputStream("D:/report.pdf"));
+
 } catch (DRException e) {
 e.printStackTrace();
 } catch (FileNotFoundException e) {

@@ -83,11 +83,25 @@ public class Attendance {
 	public void setMachineId(String machineId) {
 		this.machineId = machineId;
 	}
+	/**
+	 * @return the lastUpdated
+	 */
+	public Date getLastUpdated() {
+		return lastUpdated;
+	}
+	/**
+	 * @param lastUpdated the lastUpdated to set
+	 */
+	public void setLastUpdated(Date lastUpdated) {
+		this.lastUpdated = lastUpdated;
+	}
+
 	private int employeeId;
 	private String accessCardNo;
 	private String machineId;
 	private Date swipeIn;
 	private Date swipeOut;
 	private int totalHours;
+	private Date lastUpdated;
 
 }

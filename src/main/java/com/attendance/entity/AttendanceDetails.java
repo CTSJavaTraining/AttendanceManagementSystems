@@ -26,6 +26,9 @@ public class AttendanceDetails implements java.io.Serializable {
 	private Employee employee;
 	private Date swipeIn;
 	private Date swipeOut;
+	private Date lastUpdated;
+
+
 	private Integer totalHours;
 	private String machineName;
 
@@ -104,6 +107,20 @@ public class AttendanceDetails implements java.io.Serializable {
 
 	public void setMachineName(String machineName) {
 		this.machineName = machineName;
+	}
+	
+	/**
+	 * @return the lastUpdated
+	 */
+	public Date getLastUpdated() {
+		return lastUpdated;
+	}
+
+	/**
+	 * @param lastUpdated the lastUpdated to set
+	 */
+	public void setLastUpdated(Date lastUpdated) {
+		this.lastUpdated = lastUpdated;
 	}
 
 }

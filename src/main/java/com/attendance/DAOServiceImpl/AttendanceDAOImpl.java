@@ -1,6 +1,10 @@
 package com.attendance.DAOServiceImpl;
 
 
+import java.text.Format;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,15 +48,36 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 	 * 
 	 * Method used to fetch the attendance details of all the employees. returns
 	 * the details fetched as list.
+	 * @throws ParseException 
 	 */
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<AttendanceDetails> getAttendanceDetails() throws Exception {
+	public List<AttendanceDetails> getAttendanceDetails(LocalDate startDate,LocalDate  endDate) throws DAOException, ParseException {
 
 		entityManager = JPAUtil.getEntityManager();
 		entityManager.getTransaction().begin();
-		Query query = entityManager.createQuery("SELECT attendance FROM AttendanceDetails attendance");
+		Query query = null;
+//		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+//		String formattedDate = dateFormat.format(startDate);
+//		String formattedDate1 = dateFormat.format(endDate);
+//		Date startDate1 = dateFormat.parse(formattedDate);
+//		Date endDate1 = dateFormat.parse(formattedDate1);
+//		logger.info(dateFormat.format(startDate));
+		logger.info("start date:"+startDate);
+		logger.info("start date:"+endDate);
+//		logger.info("start date:"+startDate1);
+//		logger.info("start date:"+endDate1);
+	
+		if(startDate==null && endDate==null){
+		query = entityManager.createQuery("SELECT attendance FROM AttendanceDetails attendance");
+		}else{
+			
+			query = entityManager.createQuery("SELECT attendance FROM AttendanceDetails attendance WHERE DATE(attendance.lastUpdated) BETWEEN :stDate AND :endDate ");
+			query.setParameter("stDate", startDate);
+			query.setParameter("endDate", endDate);
+		
+		}
 
 		return (List<AttendanceDetails>) query.getResultList();
 	}
@@ -64,17 +89,29 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 	 */
 
 	@Override
-	public void insertSwipeInHours(AttendanceDetails attendance) throws Exception {
+	public void insertSwipeInHours(AttendanceDetails attendance) throws DAOException {
 		entityManager = JPAUtil.getEntityManager();
 		entityManager.getTransaction().begin();
-		
+		 boolean swipeOutExist;
+		if(attendance!=null){
 		getEmployee(attendance.getEmployee().getId().getEmployeeid(),attendance.getEmployee().getId().getAccessCardno());
 		validateEmployeeMachineDetails(attendance.getEmployee().getId().getEmployeeid(),attendance.getEmployee().getId().getAccessCardno(), attendance.getMachineName());
-		  getCurrentDateAttendance(attendance.getEmployee().getId().getEmployeeid());
+		boolean lastUpdated = getLastUpdatedTime(attendance.getEmployee().getId().getEmployeeid(),attendance.getSwipeIn());
+		if(lastUpdated==false){
+		  swipeOutExist = getCurrentDateAttendance(attendance.getEmployee().getId().getEmployeeid());
+		if(swipeOutExist==false){
+			throw new DAOException("Swipe Out doesn't Exists.Report generated");
+		}
+		}
 		
 		entityManager.persist(attendance);
 		entityManager.getTransaction().commit();
 		logger.info("Records inserted successfully");
+		}else{
+
+			throw new DAOException("The AttendanceDetails is null");
+		}
+		
 	}
 
 	/**
@@ -113,18 +150,28 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 	}
 
 	@Override
-	public void insertSwipeOutHours(AttendanceDetails attendance) throws Exception {
+	public void insertSwipeOutHours(AttendanceDetails attendance) throws DAOException {
 
 		entityManager = JPAUtil.getEntityManager();
 		entityManager.getTransaction().begin();
-		Query query = entityManager.createQuery(
-				"SELECT a.swipe_in FROM AttendanceDetails a WHERE a.employeeid= :id and a.access_cardno= :cardNo and a.swipe_in = :swipeIn and a.machine_id =:machineId");
-		EmployeeId id = attendance.getEmployee().getId();
-		query.setParameter("id", id.getEmployeeid());
-		query.setParameter("cardNo", id.getAccessCardno());
-		query.setParameter("machineId", attendance.getMachineName());
-		query.setParameter("swipeIn", attendance.getSwipeIn());
-		query.setParameter("status", "Y");
+		if(attendance!=null){
+			getEmployee(attendance.getEmployee().getId().getEmployeeid(),attendance.getEmployee().getId().getAccessCardno());
+			validateEmployeeMachineDetails(attendance.getEmployee().getId().getEmployeeid(),attendance.getEmployee().getId().getAccessCardno(), attendance.getMachineName());
+		    boolean swipeInExists = checkSwipeInExists(attendance.getEmployee().getId().getEmployeeid());
+		    if(swipeInExists){
+		    	
+		    	entityManager.persist(attendance);
+				entityManager.getTransaction().commit();
+				logger.info("Records inserted successfully");
+		    	
+		    }else{
+		    	throw new DAOException("Swipe In doesn't exists for today.Report has been generated");
+		    	
+		    }
+		}else{
+
+			throw new DAOException("The AttendanceDetails is null");
+		}
 
 	}
 
@@ -203,18 +250,20 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 
 	}
 	
-	public void getCurrentDateAttendance(int empId){
+	public boolean getCurrentDateAttendance(int empId){
 		entityManager = JPAUtil.getEntityManager();
      	entityManager.getTransaction().begin();
-     
+     	boolean swipeOutExists = true;
 		Query query = entityManager.createQuery(
 				"SELECT MAX(attendance.swipeIn) FROM AttendanceDetails attendance WHERE  attendance.employee.id.employeeid= :empId and attendance.swipeOut is not null");
 		query.setParameter("empId", empId);
 		
 		logger.info("The size is:{}"+query.getResultList().size());
+		logger.info("The size is:{}"+query.getResultList());
 		
-		if(query.getResultList().size()==1){
+		if(query.getResultList()==null){
 			logger.info("Entering into reports");
+			swipeOutExists = false;
 			Query queryReport = entityManager.createQuery("select attendance.employee.id.employeeid,MAX(attendance.swipeIn),attendance.swipeOut from AttendanceDetails attendance");
 			List<Object[]> attdet =queryReport.getResultList();
 			List<Attendance> attendanceList = new ArrayList<Attendance>();
@@ -232,10 +281,121 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 			JRDataSource dataSource = new JRBeanCollectionDataSource(attendanceList);
 			GenerateReport report = new GenerateReport();
 			report.showReport(dataSource);
-		}else{
 			
 		}
 		
+		return swipeOutExists;
+	}
+	
+	public boolean getLastUpdatedTime(int empId,Date swipeIn){
+		
+		entityManager = JPAUtil.getEntityManager();
+     	entityManager.getTransaction().begin();
+     	logger.info("The given employee id is:"+empId);
+     	logger.info("The given swipe in is:"+swipeIn);
+		Query query = entityManager.createQuery(
+				"SELECT attendance FROM AttendanceDetails attendance WHERE  attendance.employee.id.employeeid= :empId and attendance.DATE(lastUpdated)= :swipein");
+		query.setParameter("empId", empId);
+		query.setParameter("swipein", swipeIn);
+		
+
+		boolean lastUpdated = false;
+
+		if(query.getResultList().size()==0)
+		{
+			lastUpdated = true;
+		}
+			
+		logger.info("The lastUpdated is:"+lastUpdated);
+		return lastUpdated;
+		
+	}
+	
+	public boolean checkSwipeInExists(int empId){
+		
+		entityManager = JPAUtil.getEntityManager();
+     	entityManager.getTransaction().begin();
+     	boolean swipeInExists = true;
+     	logger.info("The given employee id is:"+empId);
+     	
+     	
+		Query query = entityManager.createQuery(
+				"SELECT attendance FROM attendancedetails WHERE attendance.employee.id.employeeid= :empId and attendance.lastUpdated = NOW()");
+		query.setParameter("empId", empId);
+		
+		if(query.getResultList().size()==0){
+			logger.info("Entering into reports");
+			swipeInExists = false;
+			Query queryReport = entityManager.createQuery(
+					"SELECT attendance.employee.id.employeeid,attendance.swipeIn,attendance.swipeOut,MAX(attendance.lastUpdated) FROM attendancedetails WHERE attendance.employee.id.employeeid= :empId");
+			
+			List<Object[]> attdet =queryReport.getResultList();
+			List<Attendance> attendanceList = new ArrayList<Attendance>();
+			Attendance attendance = new Attendance();
+			
+			for ( Object[] elements: attdet) {
+			   
+				attendance.setEmployeeId((int) (elements[0]));
+				attendance.setSwipeIn((Date) (elements[1]));
+				attendance.setSwipeOut((Date) (elements[2]));
+				attendance.setLastUpdated((Date) (elements[3]));
+			}
+			
+attendanceList.add(attendance);
+			
+			JRDataSource dataSource = new JRBeanCollectionDataSource(attendanceList);
+			GenerateReport report = new GenerateReport();
+			report.showReport(dataSource);
+			
+			
+		}
+		
+		
+		
+		return swipeInExists;
+		
+		
+	}
+
+	@Override
+	public List<AttendanceDetails> getEmployeeType(int empId, LocalDate  startDate, LocalDate  endDate) throws DAOException, ParseException {
+		
+		entityManager = JPAUtil.getEntityManager();
+     	entityManager.getTransaction().begin();
+     	List<AttendanceDetails> attendanceDetails = new ArrayList<AttendanceDetails>();
+     	String employeeType = null;
+     	Query query = entityManager.createQuery(
+				"SELECT employee FROM Employee employee WHERE employee.id.employeeid= :empId");
+     	query.setParameter("empId", empId);
+     	List<Employee> employee = query.getResultList();
+     	
+     	if(query.getResultList().size()!=0){
+     		
+     		for(Employee elements:employee){
+     			
+     			employeeType = elements.getUsertype();
+     			
+     			if(employeeType.equals("Contract")&&(startDate!=null)&&(endDate!=null)){
+     				
+     				throw new DAOException("Contract Employee cannot customize with start and end date");
+     				
+     			}
+     			
+     			else{
+     				
+     				attendanceDetails=getAttendanceDetails(startDate,endDate);
+     			}
+     					
+     			
+     		}
+     		
+     		
+     	}else{
+     		 throw new DAOException("No such employee Id exists in DB");
+     	}
+     	
+     	return attendanceDetails;
+
 		
 	}
 

@@ -1,5 +1,7 @@
 package com.attendance.DAOService;
 
+import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -33,7 +35,9 @@ public interface AttendanceDAO {
 	 * @throws Exception
 	 */
 
-	public List<AttendanceDetails> getAttendanceDetails() throws Exception;
+	public List<AttendanceDetails> getAttendanceDetails(LocalDate startDate, LocalDate  endDate) throws Exception;
+	
+	public List<AttendanceDetails> getEmployeeType(int empId,LocalDate startDate,LocalDate endDate) throws DAOException,ParseException;
 
 	/**
 	 * Sets the attendance details with swipe in time of the employee and
@@ -43,7 +47,7 @@ public interface AttendanceDAO {
 	 * @throws Exception
 	 */
 
-	public void insertSwipeInHours(AttendanceDetails employee) throws Exception;
+	public void insertSwipeInHours(AttendanceDetails employee) throws DAOException;
 
 	/**
 	 * Sets the attendance details with swipe out time of the employee and
@@ -52,7 +56,7 @@ public interface AttendanceDAO {
 	 * @param employee
 	 * @throws Exception
 	 */
-	public void insertSwipeOutHours(AttendanceDetails employee) throws Exception;
+	public void insertSwipeOutHours(AttendanceDetails employee) throws DAOException;
 
 	/**
 	 * Sets the swipe in and out time of the employee to calculate the total.

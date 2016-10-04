@@ -10,6 +10,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class EmployeeId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 392689239465389788L;
 	private int employeeid;
 	private String accessCardno;
 

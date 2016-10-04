@@ -6,7 +6,8 @@ package com.attendance.serviceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
 import com.attendance.DAOServiceImpl.EmployeeDAOImpl;
 import com.attendance.entity.Employee;
 import com.attendance.entity.EmployeeId;
@@ -24,12 +25,11 @@ import com.attendance.util.Utility;
  *         in EmployeeDAO interface.
  * 
  */
-@Component
+@Service
 public class EmployeeServiceImpl implements EmployeeService {
 
 	private static final Logger logger = LoggerFactory.getLogger(EmployeeServiceImpl.class);
-    
-	
+
 	@Autowired
 	private EmployeeDAOImpl employeeDAOImpl;
 
@@ -42,22 +42,23 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public void insertEmployee(EmployeeDetails employeedetails) throws Exception {
-		
-	   Employee employee = new Employee();
-	   
-	   EmployeeId employeeId = new EmployeeId();
-	   
-	   LocationDetails locationdetails = new LocationDetails();
-	   
-	   employeeId.setEmployeeid(employeedetails.getEmployeeId());
-	   
-	   employeeId.setAccessCardno(Utility.generateAccessCard());
-	   
-	   employee.setId(employeeId);
-	   
-	   locationdetails.setLocationId(employeedetails.getLocationId());
-	   
-	   employee.setLocationdetails(locationdetails);;
+
+		Employee employee = new Employee();
+
+		EmployeeId employeeId = new EmployeeId();
+
+		LocationDetails locationdetails = new LocationDetails();
+
+		employeeId.setEmployeeid(employeedetails.getEmployeeId());
+
+		employeeId.setAccessCardno(Utility.generateAccessCard());
+
+		employee.setId(employeeId);
+
+		locationdetails.setLocationId(employeedetails.getLocationId());
+
+		employee.setLocationdetails(locationdetails);
+		;
 
 		employee.setFirstname(employeedetails.getFirstName().trim());
 
@@ -66,7 +67,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee.setStatus(employeedetails.getStatus().trim());
 
 		employee.setUsertype(employeedetails.getUserType().trim());
-		
+
 		employee.setJoiningDate(Utility.getCurrentDate());
 
 		employeeDAOImpl.insertEmployee(employee);
@@ -82,9 +83,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public void deleteEmployee(int empId) throws DAOException {
-		
-		logger.info("Fetching & Deleting User with id:{} ",empId);
-		
+
+		logger.info("Fetching & Deleting User with id:{} ", empId);
+
 		EmployeeId employeeId = new EmployeeId();
 		employeeId.setEmployeeid(empId);
 		employeeDAOImpl.deleteEmployee(employeeId);
@@ -93,7 +94,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public void insertLocationDetails(Location locationDetails) throws Exception {
-	
+
 		LocationDetails locationInfo = new LocationDetails();
 		locationInfo.setLocationId(locationDetails.getLocationId());
 		locationInfo.setLocationName(locationDetails.getLocationName());
@@ -106,21 +107,21 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public void mapEmployeeToMachine(EmployeeMachineDetails machineDetails) throws Exception {
-        
-        MachineDetails machinedetails = new MachineDetails();
-        LocationDetails location = new LocationDetails();
-        Employee emp = new Employee();
-        location.setLocationId(machineDetails.getLocationId());
-        machinedetails.setLocationdetails(location);
-        employeeDAOImpl.getMachineDetails(machinedetails);
-        EmployeeId empid = new EmployeeId();
-        empid.setEmployeeid(machineDetails.getEmployeeId());
-        empid.setAccessCardno(machineDetails.getAccessCardNo());
-        emp.setId(empid);
-        machinedetails.setEmployee(emp);
-        machinedetails.setActivationStatus("Yes");
-        employeeDAOImpl.mapEmployeeToMachine(machinedetails);
-		
+
+		MachineDetails machinedetails = new MachineDetails();
+		LocationDetails location = new LocationDetails();
+		Employee emp = new Employee();
+		location.setLocationId(machineDetails.getLocationId());
+		machinedetails.setLocationdetails(location);
+		employeeDAOImpl.getMachineDetails(machinedetails);
+		EmployeeId empid = new EmployeeId();
+		empid.setEmployeeid(machineDetails.getEmployeeId());
+		empid.setAccessCardno(machineDetails.getAccessCardNo());
+		emp.setId(empid);
+		machinedetails.setEmployee(emp);
+		machinedetails.setActivationStatus("Yes");
+		employeeDAOImpl.mapEmployeeToMachine(machinedetails);
+
 	}
 
 }

@@ -1,14 +1,13 @@
 /**
  * 
  */
-package com.attendance.DAOService;
+package com.attendance.dao.service;
 
 import com.attendance.entity.Employee;
 import com.attendance.entity.EmployeeId;
 import com.attendance.entity.LocationDetails;
 import com.attendance.entity.MachineDetails;
 import com.attendance.exception.DAOException;
-import com.attendance.pojo.EmployeeMachineDetails;
 
 /**
  * @author 542320 Holds the method signature to be implemented by the
@@ -33,11 +32,26 @@ public interface EmployeeDAO {
 	 */
 
 	public void deleteEmployee(EmployeeId empId) throws DAOException;
-	
-	public void insertLocationDetails(LocationDetails location)throws Exception;
-	
-	public void mapEmployeeToMachine(MachineDetails machineDetails)throws Exception;
-	
-	public void getMachineDetails(MachineDetails machineDetails)throws Exception;
+
+	/**
+	 * 
+	 * @param location
+	 * @throws Exception
+	 */
+	public void insertLocationDetails(LocationDetails location) throws Exception;
+
+	/**
+	 * 
+	 * @param machineDetails
+	 * @throws Exception
+	 */
+	public void mapEmployeeToMachine(MachineDetails machineDetails) throws Exception;
+
+	/**
+	 * 
+	 * @param machineDetails
+	 * @throws Exception
+	 */
+	public void getMachineDetails(MachineDetails machineDetails) throws Exception;
 
 }

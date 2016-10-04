@@ -3,7 +3,6 @@
  */
 package com.attendance.service;
 
-
 import com.attendance.exception.DAOException;
 import com.attendance.pojo.EmployeeDetails;
 import com.attendance.pojo.EmployeeMachineDetails;
@@ -32,9 +31,19 @@ public interface EmployeeService {
 	 */
 
 	public void deleteEmployee(int empId) throws DAOException;
-	
-	public void insertLocationDetails(Location locationDetails)throws Exception;
-	
-	public void mapEmployeeToMachine(EmployeeMachineDetails machineDetails)throws Exception;
+
+	/**
+	 * 
+	 * @param locationDetails
+	 * @throws Exception
+	 */
+	public void insertLocationDetails(Location locationDetails) throws Exception;
+
+	/**
+	 * 
+	 * @param machineDetails
+	 * @throws Exception
+	 */
+	public void mapEmployeeToMachine(EmployeeMachineDetails machineDetails) throws Exception;
 
 }

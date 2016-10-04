@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 import com.attendance.entity.AttendanceDetails;
@@ -24,11 +23,24 @@ public interface AttendanceService {
 	 * Gets the attendance details and saves it as excel file.
 	 */
 
-	public void exportToFile(int empId,LocalDate startDate,LocalDate endDate,String fileFormat)throws DAOException, FileNotFoundException, IOException,ParseException;
-	
+	public void exportToFile(int empId, LocalDate startDate, LocalDate endDate, String fileFormat)
+			throws DAOException, FileNotFoundException, IOException, ParseException;
+
+	/**
+	 * 
+	 * @param attendanceDetails
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
 	public void exportToExcel(List<AttendanceDetails> attendanceDetails) throws FileNotFoundException, IOException;
-	
-	public void exportToCsv(List<AttendanceDetails> attendanceDetails)throws FileNotFoundException, IOException;
+
+	/**
+	 * 
+	 * @param attendanceDetails
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public void exportToCsv(List<AttendanceDetails> attendanceDetails) throws FileNotFoundException, IOException;
 
 	/**
 	 * Sets the attendance details with swipe in time of the employee and

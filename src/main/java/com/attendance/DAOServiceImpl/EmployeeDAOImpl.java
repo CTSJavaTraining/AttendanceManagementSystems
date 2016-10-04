@@ -5,16 +5,17 @@ package com.attendance.DAOServiceImpl;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-import com.attendance.DAOService.EmployeeDAO;
+import org.springframework.stereotype.Repository;
+
+import com.attendance.dao.service.EmployeeDAO;
 import com.attendance.entity.Employee;
 import com.attendance.entity.EmployeeId;
 import com.attendance.entity.LocationDetails;
 import com.attendance.entity.MachineDetails;
 import com.attendance.exception.DAOException;
-import com.attendance.pojo.EmployeeMachineDetails;
 import com.attendance.util.JPAUtil;
 
 /**
@@ -22,7 +23,7 @@ import com.attendance.util.JPAUtil;
  *         EmployeeDAO interface.
  *
  */
-@Component
+@Repository
 public class EmployeeDAOImpl implements EmployeeDAO {
 
 	private static final Logger logger = LoggerFactory.getLogger(EmployeeDAOImpl.class);
@@ -60,15 +61,16 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		entityManager = JPAUtil.getEntityManager();
 		entityManager.getTransaction().begin();
 		logger.debug("Employee Id given:{}", empId.getEmployeeid());
-		Query query = entityManager.createQuery("SELECT e FROM Employee e WHERE e.id.employeeid= :id and e.status= :status");
+		Query query = entityManager
+				.createQuery("SELECT e FROM Employee e WHERE e.id.employeeid= :id and e.status= :status");
 		query.setParameter("id", empId.getEmployeeid());
-	    query.setParameter("status", "Active");
-	    if(query.getSingleResult()!= null){
-	    	
-	    	Employee employee = (Employee)query.getSingleResult();
-	    	empId.setAccessCardno(employee.getId().getAccessCardno());
-	    	
-	    }
+		query.setParameter("status", "Active");
+		if (query.getSingleResult() != null) {
+
+			Employee employee = (Employee) query.getSingleResult();
+			empId.setAccessCardno(employee.getId().getAccessCardno());
+
+		}
 		Employee emp = entityManager.find(Employee.class, empId);
 		if (emp != null) {
 
@@ -90,7 +92,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		entityManager.persist(location);
 		entityManager.getTransaction().commit();
 		logger.info("Records inserted successfully");
-		
+
 	}
 
 	@Override
@@ -102,7 +104,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		entityManager.persist(machineDetails);
 		entityManager.getTransaction().commit();
 		logger.info("Records inserted successfully");
-		
+
 	}
 
 	@Override
@@ -112,9 +114,9 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		logger.debug("Employee Id given:{}", machineDetails.getLocationdetails().getLocationId());
 		Query query = entityManager.createQuery("SELECT e FROM LocationDetails e WHERE e.locationId= :id");
 		query.setParameter("id", machineDetails.getLocationdetails().getLocationId());
-		LocationDetails machine = (LocationDetails)query.getSingleResult();
+		LocationDetails machine = (LocationDetails) query.getSingleResult();
 		machineDetails.setMachineName(machine.getMachineName());
-		
+
 	}
 
 }

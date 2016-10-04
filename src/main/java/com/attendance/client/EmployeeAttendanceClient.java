@@ -3,9 +3,8 @@
  */
 package com.attendance.client;
 
-import java.util.Date;
-
 import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.attendance.entity.AttendanceDetails;
-import com.attendance.entity.Employee;
 import com.attendance.exception.DAOException;
 import com.attendance.pojo.Attendance;
 import com.attendance.pojo.EmployeeDetails;
@@ -61,18 +60,17 @@ public class EmployeeAttendanceClient {
 	@RequestMapping(value = "/insertemployee", method = RequestMethod.POST)
 	public ResponseEntity<String> insertEmployees(@Valid @RequestBody EmployeeDetails employee) {
 		try {
-            if(employee!=null){
-			employeeServiceImpl.insertEmployee(employee);
-            }
+			if (employee != null) {
+				employeeServiceImpl.insertEmployee(employee);
+			}
 		} catch (Exception e) {
 
-			String errorMessage;
-			logger.error("Exception Occurred while inserting records in DB:"+e);
-	        errorMessage = "Exception Occurred while inserting records in DB: "+e;
+			String errorMessage = "Exception Occurred while inserting records in DB: ";
+			logger.error(errorMessage + e);
 
-			 return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<>("Record Inserted Successfully",HttpStatus.CREATED);
+		return new ResponseEntity<>("Record Inserted Successfully", HttpStatus.CREATED);
 	}
 
 	/**
@@ -89,13 +87,12 @@ public class EmployeeAttendanceClient {
 			employeeServiceImpl.deleteEmployee(id);
 		} catch (DAOException e) {
 
-			String errorMessage;
-			logger.error("Exception Occurred while inserting records in DB:"+e);
-	        errorMessage = "Exception Occurred while inserting records in DB: "+e;
+			String errorMessage = "Exception Occurred while inserting records in DB: ";
+			logger.error(errorMessage + e);
 
-			 return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<>("Record Deleted Successfully",HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>("Record Deleted Successfully", HttpStatus.NO_CONTENT);
 	}
 
 	/**
@@ -110,17 +107,16 @@ public class EmployeeAttendanceClient {
 	public ResponseEntity<String> insertSwipeInHours(@RequestBody Attendance swipeIn) {
 
 		try {
-			if(swipeIn!=null){
-			attendanceServiceImpl.insertSwipeInHours(swipeIn);
+			if (swipeIn != null) {
+				attendanceServiceImpl.insertSwipeInHours(swipeIn);
 			}
 		} catch (DAOException e) {
-			String errorMessage;
-			logger.error("Exception Occurred while inserting records in DB:"+e);
-	        errorMessage = "Exception Occurred while inserting records in DB: "+e;
+			String errorMessage = "Exception Occurred while inserting records in DB: ";
+			logger.error(errorMessage + e);
 
-			 return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<>("Swipe In time Inserted Successfully",HttpStatus.CREATED);
+		return new ResponseEntity<>("Swipe In time Inserted Successfully", HttpStatus.CREATED);
 	}
 
 	/**
@@ -134,18 +130,17 @@ public class EmployeeAttendanceClient {
 	@RequestMapping(value = "/insertswipeout", method = RequestMethod.POST)
 	public ResponseEntity<String> insertSwipeOutHours(@RequestBody AttendanceDetails swipeOut) {
 		try {
-			if(swipeOut!=null){
-			attendanceServiceImpl.insertSwipeOutHours(swipeOut);
+			if (swipeOut != null) {
+				attendanceServiceImpl.insertSwipeOutHours(swipeOut);
 			}
 		} catch (Exception e) {
 
-			String errorMessage;
-			logger.error("Exception Occurred while inserting records in DB:"+e);
-	        errorMessage = "Exception Occurred while inserting records in DB: "+e;
+			String errorMessage = "Exception Occurred while inserting records in DB: ";
+			logger.error(errorMessage + e);
 
-			 return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<>("Swipe Out time Inserted Successfully",HttpStatus.CREATED);
+		return new ResponseEntity<>("Swipe Out time Inserted Successfully", HttpStatus.CREATED);
 	}
 
 	/**
@@ -159,70 +154,64 @@ public class EmployeeAttendanceClient {
 			deleteTimer.deleteAttendanceDetails();
 		} catch (Exception e) {
 
+			String errorMessage = "Exception Occurred while inserting records in DB: ";
+			logger.error(errorMessage + e);
 
-			String errorMessage;
-			logger.error("Exception Occurred while inserting records in DB:"+e);
-	        errorMessage = "Exception Occurred while inserting records in DB: "+e;
-
-			 return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<>("Employee Successfully deleted in DB",HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>("Employee Successfully deleted in DB", HttpStatus.NO_CONTENT);
 	}
-	
+
 	@RequestMapping(value = "/insertlocationdetails", method = RequestMethod.POST)
 	public ResponseEntity<String> insertLocationDetails(@RequestBody Location locationDetails) {
 		try {
-			if(locationDetails!=null){
-			employeeServiceImpl.insertLocationDetails(locationDetails);
+			if (locationDetails != null) {
+				employeeServiceImpl.insertLocationDetails(locationDetails);
 			}
 		} catch (Exception e) {
 
-			String errorMessage;
-			logger.error("Exception Occurred while inserting records in DB:"+e);
-	        errorMessage = "Exception Occurred while inserting records in DB: "+e;
+			String errorMessage = "Exception Occurred while inserting records in DB: ";
+			logger.error(errorMessage + e);
 
-			 return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<>("Location Details Successfully inserted in DB",HttpStatus.CREATED);
+		return new ResponseEntity<>("Location Details Successfully inserted in DB", HttpStatus.CREATED);
 	}
-	
-	
+
 	@RequestMapping(value = "/insertmachinedetails", method = RequestMethod.POST)
 	public ResponseEntity<String> insertMachineDetails(@RequestBody EmployeeMachineDetails machineDetails) {
 		try {
-			if(machineDetails!=null){
-			employeeServiceImpl.mapEmployeeToMachine(machineDetails);
+			if (machineDetails != null) {
+				employeeServiceImpl.mapEmployeeToMachine(machineDetails);
 			}
 		} catch (Exception e) {
 
-			String errorMessage;
-			logger.error("Exception Occurred while inserting records in DB:"+e);
-	        errorMessage = "Exception Occurred while inserting records in DB: "+e;
+			String errorMessage = "Exception Occurred while inserting records in DB: ";
+			logger.error(errorMessage + e);
 
-			 return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<>("Machine Details Successfully inserted in DB",HttpStatus.CREATED);
+		return new ResponseEntity<>("Machine Details Successfully inserted in DB", HttpStatus.CREATED);
 	}
-	
-	
-	 @RequestMapping(value = "/exportToFile", method = RequestMethod.POST)
-	    public ResponseEntity<String> exportToExcel(@RequestBody EmployeeType employeeType) {
-		 
-		 try{
-			 if(employeeType!=null){
-	      attendanceServiceImpl.exportToFile(employeeType.getEmpId(),employeeType.getStartDate(),employeeType.getEndDate(),employeeType.getFileFormat());
-			 }
-		 }catch (Exception e) {
 
-				String errorMessage;
-				logger.error("Exception Occurred while inserting records in DB:"+e);
-		        errorMessage = "Exception Occurred while inserting records in DB: "+e;
+	@RequestMapping(value = "/exportToFile", method = RequestMethod.POST)
+	public ResponseEntity<String> exportToExcel(@RequestBody EmployeeType employeeType) {
 
-				 return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+		try {
+			if (employeeType != null) {
+				attendanceServiceImpl.exportToFile(employeeType.getEmpId(), employeeType.getStartDate(),
+						employeeType.getEndDate(), employeeType.getFileFormat());
 			}
-		 
-		 return new ResponseEntity<>("Export to Excel or CSV is done",HttpStatus.OK);
-	      
-	    }
+		} catch (Exception e) {
+
+			String errorMessage = "Exception Occurred while inserting records in DB: ";
+			logger.error(errorMessage + e);
+
+			return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+		}
+
+		return new ResponseEntity<>("Export to Excel or CSV is done", HttpStatus.OK);
+
+	}
 
 }

@@ -1,11 +1,12 @@
 package com.attendance.entity;
 // Generated Sep 29, 2016 12:40:42 PM by Hibernate Tools 5.2.0.Beta1
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
@@ -19,6 +20,10 @@ import javax.persistence.Table;
 @Table(name = "machinedetails", catalog = "attendancemanagement")
 public class MachineDetails implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7106495160564171161L;
 	private Integer machineId;
 	private Employee employee;
 	private LocationDetails locationdetails;

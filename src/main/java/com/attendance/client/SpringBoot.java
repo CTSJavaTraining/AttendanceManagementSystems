@@ -2,7 +2,6 @@ package com.attendance.client;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -32,11 +31,12 @@ public class SpringBoot {
 
 	public static void main(String[] args) throws Exception {
 
-		logger.info("Application started...");
-//		SpringApplication.run(SpringBoot.class, args);
+		logger.debug("Application going to start...");
+		// SpringApplication.run(SpringBoot.class, args);
 		SpringApplicationBuilder builder = new SpringApplicationBuilder(SpringBoot.class);
 		builder.headless(false);
 		ConfigurableApplicationContext context = builder.run(args);
+		logger.debug("Application started...");
 
 	}
 }

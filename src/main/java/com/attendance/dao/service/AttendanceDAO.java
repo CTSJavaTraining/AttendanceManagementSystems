@@ -1,4 +1,4 @@
-package com.attendance.DAOService;
+package com.attendance.dao.service;
 
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -7,7 +7,6 @@ import java.util.List;
 
 import com.attendance.entity.AttendanceDetails;
 import com.attendance.exception.DAOException;
-import com.attendance.pojo.Attendance;
 
 /**
  * 
@@ -35,9 +34,10 @@ public interface AttendanceDAO {
 	 * @throws Exception
 	 */
 
-	public List<AttendanceDetails> getAttendanceDetails(LocalDate startDate, LocalDate  endDate) throws Exception;
-	
-	public List<AttendanceDetails> getEmployeeType(int empId,LocalDate startDate,LocalDate endDate) throws DAOException,ParseException;
+	public List<AttendanceDetails> getAttendanceDetails(LocalDate startDate, LocalDate endDate) throws Exception;
+
+	public List<AttendanceDetails> getEmployeeType(int empId, LocalDate startDate, LocalDate endDate)
+			throws DAOException, ParseException;
 
 	/**
 	 * Sets the attendance details with swipe in time of the employee and
@@ -89,7 +89,7 @@ public interface AttendanceDAO {
 	 * @throws Exception
 	 */
 
-	public void validateEmployeeMachineDetails(int empId,String accessCardNo,String machineId) throws DAOException;
+	public void validateEmployeeMachineDetails(int empId, String accessCardNo, String machineId) throws DAOException;
 
 	/**
 	 * Gets the employees inactive for past six months.

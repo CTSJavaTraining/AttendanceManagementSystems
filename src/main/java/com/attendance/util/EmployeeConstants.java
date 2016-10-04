@@ -8,11 +8,11 @@ package com.attendance.util;
  *
  */
 public class EmployeeConstants {
+
+	private EmployeeConstants() {
+
+	}
 	
-	private static final String propertyFile = "Beans.xml";
-	
-	private static final String attendanceBean = "attendance";
-	
-	private static final String employeeBean = "employee";
+	public static final String PERSISTENCE_UNIT_NAME = "Employee";
 
 }

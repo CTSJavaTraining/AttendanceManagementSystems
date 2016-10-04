@@ -11,13 +11,15 @@ import javax.persistence.Persistence;
  */
 
 public class JPAUtil {
-	private static final String PERSISTENCE_UNIT_NAME = "Employee";
 
 	private static final EntityManagerFactory entityManagerFactory;
 
+	private JPAUtil() {
+	}
+
 	static {
 		try {
-			entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+			entityManagerFactory = Persistence.createEntityManagerFactory(EmployeeConstants.PERSISTENCE_UNIT_NAME);
 		} catch (Throwable ex) {
 			throw new ExceptionInInitializerError(ex);
 		}

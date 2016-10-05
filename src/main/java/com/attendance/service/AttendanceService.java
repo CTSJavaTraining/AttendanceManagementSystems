@@ -3,7 +3,7 @@ package com.attendance.service;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import com.attendance.entity.AttendanceDetails;
@@ -20,25 +20,22 @@ public interface AttendanceService {
 
 	/**
 	 * 
-	 * Gets the attendance details and saves it as excel file.
+	 * Checks for the employee type and invokes the format of the file to be
+	 * shown.
 	 */
 
-	public void exportToFile(int empId, LocalDate startDate, LocalDate endDate, String fileFormat)
+	public void exportToFile(int empId, Date startDate, Date endDate, String fileFormat)
 			throws DAOException, FileNotFoundException, IOException, ParseException;
 
 	/**
 	 * 
-	 * @param attendanceDetails
-	 * @throws FileNotFoundException
-	 * @throws IOException
+	 * Gets the attendance details and saves it as excel file.
 	 */
 	public void exportToExcel(List<AttendanceDetails> attendanceDetails) throws FileNotFoundException, IOException;
 
 	/**
 	 * 
-	 * @param attendanceDetails
-	 * @throws FileNotFoundException
-	 * @throws IOException
+	 * Gets the attendance details and saves it as csv file.
 	 */
 	public void exportToCsv(List<AttendanceDetails> attendanceDetails) throws FileNotFoundException, IOException;
 
@@ -59,6 +56,6 @@ public interface AttendanceService {
 	 * @param swipeOut
 	 * @throws Exception
 	 */
-	public void insertSwipeOutHours(AttendanceDetails swipeOut) throws DAOException;
+	public void insertSwipeOutHours(Attendance swipeOut) throws DAOException;
 
 }

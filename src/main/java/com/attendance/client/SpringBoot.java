@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ImportResource;
 
 /**
@@ -14,7 +13,7 @@ import org.springframework.context.annotation.ImportResource;
  *         tomcat.
  *
  */
-@ComponentScan
+
 @SpringBootApplication
 @ImportResource("classpath:Beans.xml")
 public class SpringBoot {
@@ -32,7 +31,7 @@ public class SpringBoot {
 	public static void main(String[] args) throws Exception {
 
 		logger.debug("Application going to start...");
-		// SpringApplication.run(SpringBoot.class, args);
+
 		SpringApplicationBuilder builder = new SpringApplicationBuilder(SpringBoot.class);
 		builder.headless(false);
 		ConfigurableApplicationContext context = builder.run(args);

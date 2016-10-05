@@ -87,6 +87,14 @@ public class EmployeeAttendanceClient {
 			employeeServiceImpl.deleteEmployee(id);
 		} catch (DAOException e) {
 
+			String errorMessage = "Exception Occurred while inserting records in DB: " + e;
+			logger.error(errorMessage);
+
+			return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+		}
+
+		catch (Exception e) {
+
 			String errorMessage = "Exception Occurred while inserting records in DB: ";
 			logger.error(errorMessage + e);
 
@@ -111,6 +119,12 @@ public class EmployeeAttendanceClient {
 				attendanceServiceImpl.insertSwipeInHours(swipeIn);
 			}
 		} catch (DAOException e) {
+			String errorMessage = "Exception Occurred while inserting records in DB: " + e;
+			logger.error(errorMessage);
+
+			return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+		} catch (Exception e) {
+
 			String errorMessage = "Exception Occurred while inserting records in DB: ";
 			logger.error(errorMessage + e);
 
@@ -127,12 +141,17 @@ public class EmployeeAttendanceClient {
 	 * @return
 	 */
 
-	@RequestMapping(value = "/insertswipeout", method = RequestMethod.POST)
-	public ResponseEntity<String> insertSwipeOutHours(@RequestBody AttendanceDetails swipeOut) {
+	@RequestMapping(value = "/insertswipeout", method = RequestMethod.PUT)
+	public ResponseEntity<String> insertSwipeOutHours(@RequestBody Attendance swipeOut) {
 		try {
 			if (swipeOut != null) {
 				attendanceServiceImpl.insertSwipeOutHours(swipeOut);
 			}
+		} catch (DAOException e) {
+			String errorMessage = "Exception Occurred while inserting records in DB: " + e;
+			logger.error(errorMessage);
+
+			return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
 
 			String errorMessage = "Exception Occurred while inserting records in DB: ";
@@ -202,6 +221,11 @@ public class EmployeeAttendanceClient {
 				attendanceServiceImpl.exportToFile(employeeType.getEmpId(), employeeType.getStartDate(),
 						employeeType.getEndDate(), employeeType.getFileFormat());
 			}
+		} catch (DAOException e) {
+			String errorMessage = "Exception Occurred while inserting records in DB: " + e;
+			logger.error(errorMessage);
+
+			return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
 
 			String errorMessage = "Exception Occurred while inserting records in DB: ";

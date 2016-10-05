@@ -11,6 +11,14 @@ import java.util.Date;
  */
 public class Attendance {
 
+	private int employeeId;
+	private String accessCardNo;
+	private String machineId;
+	private Date swipeIn;
+	private Date swipeOut;
+	private int totalHours;
+	private Date lastUpdated;
+
 	/**
 	 * @return the employeeId
 	 */
@@ -115,13 +123,5 @@ public class Attendance {
 	public void setLastUpdated(Date lastUpdated) {
 		this.lastUpdated = lastUpdated;
 	}
-
-	private int employeeId;
-	private String accessCardNo;
-	private String machineId;
-	private Date swipeIn;
-	private Date swipeOut;
-	private int totalHours;
-	private Date lastUpdated;
 
 }

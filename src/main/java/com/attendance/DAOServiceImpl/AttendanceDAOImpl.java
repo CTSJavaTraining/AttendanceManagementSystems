@@ -1,7 +1,7 @@
 package com.attendance.DAOServiceImpl;
 
 import java.text.ParseException;
-import java.time.LocalDate;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,31 +47,27 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<AttendanceDetails> getAttendanceDetails(LocalDate startDate, LocalDate endDate)
+	public List<AttendanceDetails> getAttendanceDetails(Date startDate, Date endDate,String employeeType)
 			throws DAOException, ParseException {
 
 		entityManager = JPAUtil.getEntityManager();
 		entityManager.getTransaction().begin();
 		Query query = null;
-		// SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-		// String formattedDate = dateFormat.format(startDate);
-		// String formattedDate1 = dateFormat.format(endDate);
-		// Date startDate1 = dateFormat.parse(formattedDate);
-		// Date endDate1 = dateFormat.parse(formattedDate1);
-		// logger.info(dateFormat.format(startDate));
-		logger.info("start date:" + startDate);
-		logger.info("start date:" + endDate);
-		// logger.info("start date:"+startDate1);
-		// logger.info("start date:"+endDate1);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy,MM,dd");
+		String startFormattedDate = dateFormat.format(startDate);
+		String endFormattedDate = dateFormat.format(endDate);
 
-		if (startDate == null && endDate == null) {
+		logger.info("start date:" + startFormattedDate);
+		logger.info("end date:" + endFormattedDate);
+
+		if (employeeType.equals("Contract")) {
 			query = entityManager.createQuery("SELECT attendance FROM AttendanceDetails attendance");
 		} else {
 
 			query = entityManager.createQuery(
-					"SELECT attendance FROM AttendanceDetails attendance WHERE DATE(attendance.lastUpdated) BETWEEN :stDate AND :endDate ");
-			query.setParameter("stDate", startDate);
-			query.setParameter("endDate", endDate);
+					"SELECT attendance FROM AttendanceDetails attendance WHERE DATE(attendance.lastUpdated) BETWEEN STR_TO_DATE(:stDate,'%Y,%m,%d') AND STR_TO_DATE(:endDate,'%Y,%m,%d') ");
+			query.setParameter("stDate", startFormattedDate);
+			query.setParameter("endDate", endFormattedDate);
 
 		}
 
@@ -161,7 +157,12 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 			boolean swipeInExists = checkSwipeInExists(attendance.getEmployee().getId().getEmployeeid());
 			if (swipeInExists) {
 
-				entityManager.persist(attendance);
+				Query query = entityManager.createQuery(
+						"UPDATE AttendanceDetails attendance SET attendance.swipeOut = :swipeOut "
+								+ "WHERE attendance.employee.id.employeeid= :empId having MAX(attendance.lastUpdated )");
+				query.setParameter("swipeOut", attendance.getSwipeOut());
+				query.setParameter("empId", attendance.getEmployee().getId().getEmployeeid());
+				query.executeUpdate();
 				entityManager.getTransaction().commit();
 				logger.info("Records inserted successfully");
 
@@ -177,18 +178,12 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 	}
 
 	@Override
-	public String calculateTotalHours(Date swipeInTime, Date swipeOutTime) throws Exception {
+	public long calculateTotalHours(Date swipeInTime, Date swipeOutTime) throws Exception {
 		long timeDifference = swipeInTime.getTime() - swipeOutTime.getTime();
 		long diffMinutes = timeDifference / (60 * 1000) % 60;
 		long diffHours = timeDifference / (60 * 60 * 1000);
-		return diffHours + "h" + " " + diffMinutes + "m";
+		return diffHours;
 
-	}
-
-	@Override
-	public int calculateWeekAverage() throws Exception {
-
-		return 0;
 	}
 
 	@Override
@@ -258,9 +253,9 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 		query.setParameter("empId", empId);
 
 		logger.info("The size is:{}" + query.getResultList().size());
-		logger.info("The size is:{}" + query.getResultList());
+		
 
-		if (query.getResultList() == null) {
+		if (query.getResultList().get(0) == null) {
 			logger.info("Entering into reports");
 			swipeOutExists = false;
 			Query queryReport = entityManager.createQuery(
@@ -293,10 +288,13 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 		entityManager.getTransaction().begin();
 		logger.info("The given employee id is:" + empId);
 		logger.info("The given swipe in is:" + swipeIn);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy,MM,dd");
+		String swipeInFormat = dateFormat.format(swipeIn);
+
 		Query query = entityManager.createQuery(
-				"SELECT attendance FROM AttendanceDetails attendance WHERE  attendance.employee.id.employeeid= :empId and attendance.DATE(lastUpdated)= :swipein");
+				"SELECT attendance FROM AttendanceDetails attendance WHERE  attendance.employee.id.employeeid= :empId and DATE(attendance.lastUpdated)= STR_TO_DATE(:swipein,'%Y,%m,%d')");
 		query.setParameter("empId", empId);
-		query.setParameter("swipein", swipeIn);
+		query.setParameter("swipein", swipeInFormat);
 
 		boolean lastUpdated = false;
 
@@ -317,15 +315,15 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 		logger.info("The given employee id is:" + empId);
 
 		Query query = entityManager.createQuery(
-				"SELECT attendance FROM attendancedetails WHERE attendance.employee.id.employeeid= :empId and attendance.lastUpdated = NOW()");
+				"SELECT attendance FROM AttendanceDetails attendance WHERE attendance.employee.id.employeeid= :empId AND DATE(attendance.lastUpdated) = CURDATE() AND attendance.swipeIn is not null AND attendance.swipeOut is null");
 		query.setParameter("empId", empId);
 
 		if (query.getResultList().size() == 0) {
 			logger.info("Entering into reports");
 			swipeInExists = false;
 			Query queryReport = entityManager.createQuery(
-					"SELECT attendance.employee.id.employeeid,attendance.swipeIn,attendance.swipeOut,MAX(attendance.lastUpdated) FROM attendancedetails WHERE attendance.employee.id.employeeid= :empId");
-
+					"SELECT attendance.employee.id.employeeid,attendance.swipeIn,attendance.swipeOut,MAX(attendance.lastUpdated) FROM AttendanceDetails attendance WHERE attendance.employee.id.employeeid= :empId");
+			queryReport.setParameter("empId", empId);
 			List<Object[]> attdet = queryReport.getResultList();
 			List<Attendance> attendanceList = new ArrayList<Attendance>();
 			Attendance attendance = new Attendance();
@@ -351,7 +349,7 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 	}
 
 	@Override
-	public List<AttendanceDetails> getEmployeeType(int empId, LocalDate startDate, LocalDate endDate)
+	public List<AttendanceDetails> getEmployeeType(int empId, Date startDate, Date endDate)
 			throws DAOException, ParseException {
 
 		entityManager = JPAUtil.getEntityManager();
@@ -359,8 +357,9 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 		List<AttendanceDetails> attendanceDetails = new ArrayList<AttendanceDetails>();
 		String employeeType = null;
 		Query query = entityManager
-				.createQuery("SELECT employee FROM Employee employee WHERE employee.id.employeeid= :empId");
+				.createQuery("SELECT employee FROM Employee employee WHERE employee.id.employeeid= :empId and employee.status= :status");
 		query.setParameter("empId", empId);
+		query.setParameter("status", "Active");
 		List<Employee> employee = query.getResultList();
 
 		if (query.getResultList().size() != 0) {
@@ -377,7 +376,7 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 
 				else {
 
-					attendanceDetails = getAttendanceDetails(startDate, endDate);
+					attendanceDetails = getAttendanceDetails(startDate, endDate,employeeType);
 				}
 
 			}

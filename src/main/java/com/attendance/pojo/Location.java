@@ -9,6 +9,12 @@ package com.attendance.pojo;
  */
 public class Location {
 
+	private String locationName;
+	private String block;
+	private String floor;
+	private String wing;
+	private String machineName;
+
 	/**
 	 * @return the locationName
 	 */
@@ -100,11 +106,5 @@ public class Location {
 	public void setMachineName(String machineName) {
 		this.machineName = machineName;
 	}
-
-	private String locationName;
-	private String block;
-	private String floor;
-	private String wing;
-	private String machineName;
 
 }

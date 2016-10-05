@@ -3,12 +3,7 @@
  */
 package com.attendance.pojo;
 
-import java.time.LocalDate;
-
-import com.attendance.util.LocalDateTimeDeserializer;
-import com.attendance.util.LocalDateTimeSerializer;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.util.Date;
 
 /**
  * @author 523696
@@ -17,12 +12,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public class EmployeeType {
 
 	private int empId;
-	@JsonSerialize(using = LocalDateTimeSerializer.class)
-	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
-	private LocalDate startDate;
-	@JsonSerialize(using = LocalDateTimeSerializer.class)
-	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
-	private LocalDate endDate;
+
+	private Date startDate;
+
+	private Date endDate;
 	private String fileFormat;
 
 	public int getEmpId() {
@@ -33,19 +26,19 @@ public class EmployeeType {
 		this.empId = empId;
 	}
 
-	public LocalDate getStartDate() {
+	public Date getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(LocalDate startDate) {
+	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
 
-	public LocalDate getEndDate() {
+	public Date getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(LocalDate endDate) {
+	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
 

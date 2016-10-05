@@ -6,8 +6,8 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
-import java.time.LocalDate;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.poi.ss.usermodel.Row;
@@ -18,7 +18,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.attendance.DAOServiceImpl.AttendanceDAOImpl;
+import com.attendance.dao.service.AttendanceDAO;
+
 import com.attendance.entity.AttendanceDetails;
 import com.attendance.entity.Employee;
 import com.attendance.entity.EmployeeId;
@@ -39,10 +40,10 @@ public class AttendanceServiceImpl implements AttendanceService {
 	private static final Logger logger = LoggerFactory.getLogger(AttendanceService.class);
 
 	@Autowired
-	private AttendanceDAOImpl attendanceDAOImpl;
+	private  AttendanceDAO attendanceDAOImpl;
 
 	/**
-	 * Method to get the attendance details and save it as excel.
+	 * Method to get the employee type and invoke the respective file format.
 	 * 
 	 * @throws DAOException
 	 * @throws IOException
@@ -50,7 +51,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 	 */
 
 	@Override
-	public void exportToFile(int empId, LocalDate startDate, LocalDate endDate, String fileFormat)
+	public void exportToFile(int empId, Date startDate, Date endDate, String fileFormat)
 			throws DAOException, IOException, ParseException {
 
 		List<AttendanceDetails> attendanceList = Collections.emptyList();
@@ -97,11 +98,30 @@ public class AttendanceServiceImpl implements AttendanceService {
 	 * layer.
 	 */
 	@Override
-	public void insertSwipeOutHours(AttendanceDetails attendance) throws DAOException {
+	public void insertSwipeOutHours(Attendance attendance) throws DAOException {
 
-		attendanceDAOImpl.insertSwipeOutHours(attendance);
+		AttendanceDetails attendanceDetails = new AttendanceDetails();
+		Employee employee = new Employee();
+		EmployeeId empId = new EmployeeId();
+
+		empId.setEmployeeid(attendance.getEmployeeId());
+		empId.setAccessCardno(attendance.getAccessCardNo());
+		employee.setId(empId);
+		attendanceDetails.setEmployee(employee);
+		attendanceDetails.setMachineName(attendance.getMachineId());
+		attendanceDetails.setLastUpdated(Utility.getCurrentDate());
+		attendanceDetails.setSwipeOut(Utility.getCurrentDate());
+
+		attendanceDAOImpl.insertSwipeOutHours(attendanceDetails);
 
 	}
+
+	/**
+	 * Method to get the attendance details and download it in excel format.
+	 * 
+	 * @throws IOException
+	 * @throws ParseException
+	 */
 
 	@Override
 	public void exportToExcel(List<AttendanceDetails> attendanceDetails) throws FileNotFoundException, IOException {
@@ -120,10 +140,10 @@ public class AttendanceServiceImpl implements AttendanceService {
 		header.createCell(2).setCellValue("Swipe in time");
 		header.createCell(3).setCellValue("Swipe out time");
 		header.createCell(4).setCellValue("Hours logged");
-
+		int rowNum = 1;
 		for (AttendanceDetails obj : attendanceDetails) {
 
-			Row dataRow = sheet.createRow(1);
+			Row dataRow = sheet.createRow(rowNum++);
 			dataRow.createCell(0).setCellValue(obj.getEmployee().getId().getEmployeeid());
 			dataRow.createCell(1).setCellValue(obj.getEmployee().getId().getAccessCardno());
 			dataRow.createCell(2).setCellValue(obj.getSwipeIn());
@@ -139,6 +159,13 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 	}
 
+	/**
+	 * Method to get the attendance details and download it in csv format.
+	 * 
+	 * @throws IOException
+	 * @throws ParseException
+	 */
+
 	@Override
 	public void exportToCsv(List<AttendanceDetails> attendanceDetails) throws FileNotFoundException, IOException {
 
@@ -146,7 +173,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 		final String COMMA_DELIMITER = ",";
 
-		final String NEW_LINE_SEPARATOR = "\n";
+		final String NEW_LINE_SEPARATOR = "\r\n";
 
 		// CSV file header
 
@@ -159,6 +186,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 		// Write the CSV file header
 
 		fileWriter.append(FILE_HEADER.toString());
+		fileWriter.append(NEW_LINE_SEPARATOR);
 
 		// Add a new line separator after the header
 
@@ -175,6 +203,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 			fileWriter.append(String.valueOf(obj.getSwipeOut()));
 			fileWriter.append(COMMA_DELIMITER);
 			fileWriter.append(String.valueOf(obj.getTotalHours()));
+			fileWriter.append(NEW_LINE_SEPARATOR);
 
 		}
 
@@ -186,9 +215,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 		} catch (IOException e) {
 
-			logger.info("Error while flushing/closing fileWriter !!!");
-
-			e.printStackTrace();
+			logger.error("Error while flushing/closing fileWriter !!!" + e);
 
 		}
 

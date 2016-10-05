@@ -9,6 +9,12 @@ package com.attendance.pojo;
  */
 public class EmployeeMachineDetails {
 
+	private String machineName;
+	private int locationId;
+	private int employeeId;
+	private String accessCardNo;
+	private String activationStatus;
+
 	/**
 	 * @return the machineName
 	 */
@@ -83,11 +89,5 @@ public class EmployeeMachineDetails {
 	public void setActivationStatus(String activationStatus) {
 		this.activationStatus = activationStatus;
 	}
-
-	private String machineName;
-	private int locationId;
-	private int employeeId;
-	private String accessCardNo;
-	private String activationStatus;
 
 }

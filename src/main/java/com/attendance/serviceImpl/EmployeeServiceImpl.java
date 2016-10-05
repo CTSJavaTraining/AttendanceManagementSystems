@@ -57,17 +57,16 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		locationdetails.setLocationId(employeedetails.getLocationId());
 
-		employee.setLocationdetails(locationdetails);
-		;
+	   employee.setLocationdetails(locationdetails);;
 
 		employee.setFirstname(employeedetails.getFirstName().trim());
 
 		employee.setLastname(employeedetails.getLastName().trim());
 
-		employee.setStatus(employeedetails.getStatus().trim());
+		employee.setStatus("Active");
 
 		employee.setUsertype(employeedetails.getUserType().trim());
-
+		
 		employee.setJoiningDate(Utility.getCurrentDate());
 
 		employeeDAOImpl.insertEmployee(employee);
@@ -83,18 +82,25 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public void deleteEmployee(int empId) throws DAOException {
-
-		logger.info("Fetching & Deleting User with id:{} ", empId);
-
+		
+		logger.debug("Fetching & Deleting User with id:{} ",empId);
+		
 		EmployeeId employeeId = new EmployeeId();
 		employeeId.setEmployeeid(empId);
 		employeeDAOImpl.deleteEmployee(employeeId);
 
 	}
+	
+	/**
+	 * 
+	 * Service method to invoke the insertLocationDetails of DAO class.
+	 * 
+	 * @throws Exception
+	 */
 
 	@Override
 	public void insertLocationDetails(Location locationDetails) throws Exception {
-
+	
 		LocationDetails locationInfo = new LocationDetails();
 		locationInfo.setLocationId(locationDetails.getLocationId());
 		locationInfo.setLocationName(locationDetails.getLocationName());
@@ -104,24 +110,31 @@ public class EmployeeServiceImpl implements EmployeeService {
 		locationInfo.setMachineName(Utility.generateAccessCard());
 		employeeDAOImpl.insertLocationDetails(locationInfo);
 	}
+	
+	/**
+	 * 
+	 * Service method to invoke the mapEmployeeToMachine of DAO class.
+	 * 
+	 * @throws Exception
+	 */
 
 	@Override
 	public void mapEmployeeToMachine(EmployeeMachineDetails machineDetails) throws Exception {
-
-		MachineDetails machinedetails = new MachineDetails();
-		LocationDetails location = new LocationDetails();
-		Employee emp = new Employee();
-		location.setLocationId(machineDetails.getLocationId());
-		machinedetails.setLocationdetails(location);
-		employeeDAOImpl.getMachineDetails(machinedetails);
-		EmployeeId empid = new EmployeeId();
-		empid.setEmployeeid(machineDetails.getEmployeeId());
-		empid.setAccessCardno(machineDetails.getAccessCardNo());
-		emp.setId(empid);
-		machinedetails.setEmployee(emp);
-		machinedetails.setActivationStatus("Yes");
-		employeeDAOImpl.mapEmployeeToMachine(machinedetails);
-
+        
+        MachineDetails machinedetails = new MachineDetails();
+        LocationDetails location = new LocationDetails();
+        Employee emp = new Employee();
+        location.setLocationId(machineDetails.getLocationId());
+        machinedetails.setLocationdetails(location);
+        employeeDAOImpl.getMachineDetails(machinedetails);
+        EmployeeId empid = new EmployeeId();
+        empid.setEmployeeid(machineDetails.getEmployeeId());
+        empid.setAccessCardno(machineDetails.getAccessCardNo());
+        emp.setId(empid);
+        machinedetails.setEmployee(emp);
+        machinedetails.setActivationStatus("Yes");
+        employeeDAOImpl.mapEmployeeToMachine(machinedetails);
+		
 	}
 
 }

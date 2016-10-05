@@ -1,7 +1,6 @@
 package com.attendance.dao.service;
 
 import java.text.ParseException;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -34,9 +33,9 @@ public interface AttendanceDAO {
 	 * @throws Exception
 	 */
 
-	public List<AttendanceDetails> getAttendanceDetails(LocalDate startDate, LocalDate endDate) throws Exception;
+	public List<AttendanceDetails> getAttendanceDetails(Date startDate, Date endDate,String employeeType) throws Exception;
 
-	public List<AttendanceDetails> getEmployeeType(int empId, LocalDate startDate, LocalDate endDate)
+	public List<AttendanceDetails> getEmployeeType(int empId, Date startDate, Date endDate)
 			throws DAOException, ParseException;
 
 	/**
@@ -68,17 +67,7 @@ public interface AttendanceDAO {
 	 * @throws Exception
 	 */
 
-	public String calculateTotalHours(Date swipeInTime, Date swipeOutTime) throws Exception;
-
-	/**
-	 * Sets the total hours per day to calculate the average hours per week.
-	 * 
-	 * @param totalHours
-	 * @return
-	 * @throws Exception
-	 */
-
-	public int calculateWeekAverage() throws Exception;
+	public long calculateTotalHours(Date swipeInTime, Date swipeOutTime) throws Exception;
 
 	/**
 	 * MachineId passed as input to validate whether employee has been mapped to

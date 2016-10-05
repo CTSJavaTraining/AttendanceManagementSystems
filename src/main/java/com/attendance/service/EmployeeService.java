@@ -34,15 +34,17 @@ public interface EmployeeService {
 
 	/**
 	 * 
-	 * @param locationDetails
-	 * @throws Exception
+	 * Sets the locationdetails and insert in DB.
+	 * 
+	 * @param locationdetails
 	 */
 	public void insertLocationDetails(Location locationDetails) throws Exception;
 
 	/**
 	 * 
+	 * Sets the machineDetails and insert in DB.
+	 * 
 	 * @param machineDetails
-	 * @throws Exception
 	 */
 	public void mapEmployeeToMachine(EmployeeMachineDetails machineDetails) throws Exception;
 

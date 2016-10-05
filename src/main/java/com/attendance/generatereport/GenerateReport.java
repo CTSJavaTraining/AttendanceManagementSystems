@@ -11,18 +11,18 @@ import net.sf.dynamicreports.report.builder.datatype.DataTypes;
 import net.sf.dynamicreports.report.constant.HorizontalAlignment;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRDataSource;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
- * 
- * @author 559207
- *
+ * Class to generate report for invalid access using jasper.
  */
 public class GenerateReport {
-
-	/**
-	 * 
-	 * @param dataSource
-	 */
+	
+	private static final Logger logger = LoggerFactory.getLogger(GenerateReport.class);
+/**
+ * Method to get the JRDatasource which has the query element,fetch from DB and show it in report.
+ * @param dataSource
+ */
 	public void showReport(JRDataSource dataSource) {
 		JasperReportBuilder report = DynamicReports.report();// a new report
 		report.columns(
@@ -44,9 +44,11 @@ public class GenerateReport {
 			report.toPdf(new FileOutputStream("D:/report.pdf"));
 
 		} catch (DRException e) {
-			e.printStackTrace();
+			String errorMessage = "Exception Occurred while inserting records in DB: ";
+			logger.error(errorMessage+e);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			String errorMessage = "Exception Occurred while inserting records in DB: ";
+			logger.error(errorMessage+e);
 		}
 	}
 

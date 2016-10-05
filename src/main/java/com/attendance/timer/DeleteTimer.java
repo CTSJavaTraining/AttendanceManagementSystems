@@ -13,6 +13,8 @@ import com.attendance.DAOServiceImpl.AttendanceDAOImpl;
 
 /**
  * @author 523696
+ * 
+ * Timer to delete the attendance record of inactive employee
  *
  */
 @Component

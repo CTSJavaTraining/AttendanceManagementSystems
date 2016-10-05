@@ -25,8 +25,7 @@ public class EmployeeDetails {
 	@NotBlank(message = "Usertype must not be blank!")
 	@Pattern(regexp = "[a-zA-Z]*", message = "Please enter the value in the format - 'Permanent' or 'Contract'.")
 	private String userType;
-	@NotBlank(message = "Status must not be blank!")
-	@Pattern(regexp = "[a-zA-Z]*", message = "Please enter the value in the format - 'ACTIVE' or 'INACTIVE'.")
+
 	private String status;
 	private Date joiningDate;
 

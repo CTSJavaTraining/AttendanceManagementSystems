@@ -52,7 +52,7 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 
 		entityManager = JPAUtil.getEntityManager();
 		entityManager.getTransaction().begin();
-		Query query = null;
+		Query query;
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy,MM,dd");
 		String startFormattedDate = dateFormat.format(startDate);
 		String endFormattedDate = dateFormat.format(endDate);
@@ -92,9 +92,9 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 					attendance.getEmployee().getId().getAccessCardno(), attendance.getMachineName());
 			boolean lastUpdated = getLastUpdatedTime(attendance.getEmployee().getId().getEmployeeid(),
 					attendance.getSwipeIn());
-			if (lastUpdated == false) {
+			if (!lastUpdated) {
 				swipeOutExist = getCurrentDateAttendance(attendance.getEmployee().getId().getEmployeeid());
-				if (swipeOutExist == false) {
+				if (!swipeOutExist) {
 					throw new DAOException("Swipe Out doesn't Exists.Report generated");
 				}
 			}
@@ -219,10 +219,9 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 		query.setParameter("status", "INACTIVE");
 		int employeeSize = query.getResultList().size();
 
-		@SuppressWarnings("unchecked")
-		List<Integer> employeeIdList = (List<Integer>) query.getResultList();
+	
 
-		return employeeIdList;
+		return (List<Integer>) query.getResultList();
 	}
 
 	@Override
@@ -298,7 +297,7 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 
 		boolean lastUpdated = false;
 
-		if (query.getResultList().size() == 0) {
+		if (query.getResultList().isEmpty()) {
 			lastUpdated = true;
 		}
 
@@ -318,7 +317,7 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 				"SELECT attendance FROM AttendanceDetails attendance WHERE attendance.employee.id.employeeid= :empId AND DATE(attendance.lastUpdated) = CURDATE() AND attendance.swipeIn is not null AND attendance.swipeOut is null");
 		query.setParameter("empId", empId);
 
-		if (query.getResultList().size() == 0) {
+		if (query.getResultList().isEmpty()) {
 			logger.info("Entering into reports");
 			swipeInExists = false;
 			Query queryReport = entityManager.createQuery(
@@ -354,15 +353,15 @@ public class AttendanceDAOImpl implements AttendanceDAO {
 
 		entityManager = JPAUtil.getEntityManager();
 		entityManager.getTransaction().begin();
-		List<AttendanceDetails> attendanceDetails = new ArrayList<AttendanceDetails>();
-		String employeeType = null;
+		List<AttendanceDetails> attendanceDetails = new ArrayList<>();
+		String employeeType;
 		Query query = entityManager
 				.createQuery("SELECT employee FROM Employee employee WHERE employee.id.employeeid= :empId and employee.status= :status");
 		query.setParameter("empId", empId);
 		query.setParameter("status", "Active");
 		List<Employee> employee = query.getResultList();
 
-		if (query.getResultList().size() != 0) {
+		if (query.getResultList().isEmpty()) {
 
 			for (Employee elements : employee) {
 
